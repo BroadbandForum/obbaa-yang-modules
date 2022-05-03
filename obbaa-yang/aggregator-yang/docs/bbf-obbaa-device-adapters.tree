@@ -1,0 +1,9 @@
+module: bbf-obbaa-device-adapters
+  +--rw deploy-adapter
+  |  +---x deploy
+  |     +---w input
+  |        +---w adapter-archive?   string
+  +--rw undeploy-adapter
+     +---x undeploy
+        +---w input
+           +---w adapter-archive?   string

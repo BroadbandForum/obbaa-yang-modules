@@ -1,0 +1,78 @@
+{
+  "bbf-vomci-function:vomci": {
+    "remote-network-function": {
+      "nf-client": {
+        "enabled": true,
+        "nf-initiate": {
+          "remote-endpoints": {
+            "remote-endpoint": [
+              {
+                "name": "vOLTMF_Kafka_1",
+                "nf-type": "bbf-network-function-types:voltmf-type",
+                "local-endpoint-name": "vOMCI-kfk-1",
+                "kafka-agent": {
+                  "kafka-agent-parameters": {
+                    "client-id": "client-id2",
+                    "publication-parameters": {
+                      "topic": [
+                        {
+                          "name": "vomci1-response",
+                          "purpose": "VOMCI_RESPONSE"
+                        },
+                        {
+                          "name": "vomci1-notification",
+                          "purpose": "VOMCI_NOTIFICATION"
+                        }
+                      ]
+                    },
+                    "consumption-parameters": {
+                      "topic": [
+                        {
+                          "name": "vomci1-request",
+                          "purpose": "VOMCI_REQUEST"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "access-point": [
+                  {
+                    "name": "vOLTMF_Kafka_1",
+                    "kafka-agent": {
+                      "kafka-agent-transport-parameters": {
+                        "remote-address": "kafka-host"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "name": "proxy-grpc-1",
+                "nf-type": "bbf-network-function-types:vomci-proxy-type",
+                "local-endpoint-name": "vOMCI-grpc-1",
+                "grpc": {
+                  "grpc-client-parameters": {
+                    "channel": {
+                      "ping-interval": 300
+                    }
+                  }
+                },
+                "access-point": [
+                  {
+                    "name": "proxy-grpc-1",
+                    "grpc": {
+                      "grpc-transport-parameters": {
+                        "remote-address": "::",
+                        "local-port": 8100
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

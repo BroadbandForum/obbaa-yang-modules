@@ -1,0 +1,48 @@
+<hw:hardware xmlns:hw="urn:ietf:params:xml:ns:yang:ietf-hardware">
+ <hw:component>
+   <hw:name>ont1</hw:name>
+   <hw:class  xmlns:ianahw="urn:ietf:params:xml:ns:yang:iana-hardware">ianahw:chassis</hw:class>
+   <hw:hardware-rev>HWREV_1</hw:hardware-rev>
+   <hw:mfg-name>manufacturer1</hw:mfg-name>
+   <hw:model-name>EqptModelName_1</hw:model-name>
+   <hw:serial-num>ABCD12345678</hw:serial-num>
+   <bbf-swm:software xmlns:bbf-swm="urn:bbf:yang:bbf-software-management">
+     <bbf-swm:software>
+       <bbf-swm:name>model1-software</bbf-swm:name>
+       <bbf-swm:revisions>
+         <bbf-swm:maximum-number-of-revisions>2</bbf-swm:maximum-number-of-revisions>
+         <bbf-swm:revision>
+           <bbf-swm:id>1</bbf-swm:id>
+           <bbf-swm:alias>model1-software-rev1</bbf-swm:alias>
+           <bbf-swm:state>in-use</bbf-swm:state>
+           <bbf-swm:last-changed>2022-01-09T13:53:36+00:00</bbf-swm:last-changed>
+           <bbf-swm:version>1.0.0</bbf-swm:version>
+           <bbf-swm:product-code>pcode</bbf-swm:product-code>
+           <bbf-swm:hash>123456789</bbf-swm:hash>
+           <bbf-swm:is-valid>true</bbf-swm:is-valid>
+           <bbf-swm:is-active>true</bbf-swm:is-active>
+           <bbf-swm:is-committed>true</bbf-swm:is-committed>
+         </bbf-swm:revision>
+         <bbf-swm:revision>
+           <bbf-swm:id>2</bbf-swm:id>
+           <bbf-swm:alias>model1-software-rev2</bbf-swm:alias>
+           <bbf-swm:state>available</bbf-swm:state>
+           <bbf-swm:last-changed>2022-01-09T13:55:36+00:00</bbf-swm:last-changed>
+           <bbf-swm:version>2.0.0</bbf-swm:version>
+           <bbf-swm:product-code>pcode</bbf-swm:product-code>
+           <bbf-swm:hash>134323233</bbf-swm:hash>
+           <bbf-swm:is-valid>true</bbf-swm:is-valid>
+           <bbf-swm:is-active>false</bbf-swm:is-active>
+           <bbf-swm:is-committed>false</bbf-swm:is-committed>
+         </bbf-swm:revision>
+       </bbf-swm:revisions>
+     </bbf-swm:software>
+   </bbf-swm:software>
+ </hw:component>
+</hw:hardware>
+<if:interfaces-state xmlns:if="urn:ietf:params:xml:ns:yang:ietf-interfaces">
+ <if:interface>
+   <if:name>ont1_uni1</if:name>
+   <if:oper-status>up</if:oper-status>
+ </if:interface>
+</if:interfaces-state>

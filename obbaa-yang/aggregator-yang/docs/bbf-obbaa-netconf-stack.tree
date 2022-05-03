@@ -1,0 +1,15 @@
+module: bbf-obbaa-netconf-stack
+
+  augment /ncn:netconf-config-change/ncn:edit:
+    +-- changed-leaf* []
+       +-- value?   <anyxml>
+  augment /ncn:netconf-config-change/ncn:edit:
+    +-- implied?   empty
+
+  notifications:
+    +---n netconf-state-change
+       +--ro changes* []
+          +--ro target?         instance-identifier
+          +--ro changed-leaf* [item]
+             +--ro item     uint8
+             +--ro value?   <anyxml>

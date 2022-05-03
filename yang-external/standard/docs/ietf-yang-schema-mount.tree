@@ -1,0 +1,43 @@
+module: ietf-yang-schema-mount
+  +--ro schema-mounts
+     +--ro namespace* [prefix]
+     |  +--ro prefix    yang:yang-identifier
+     |  +--ro uri?      inet:uri
+     +--ro mount-point* [module label]
+     |  +--ro module              yang:yang-identifier
+     |  +--ro label               yang:yang-identifier
+     |  +--ro config?             boolean
+     |  +--ro (schema-ref)
+     |     +--:(inline)
+     |     |  +--ro inline?       empty
+     |     +--:(use-schema)
+     |        +--ro use-schema* [name]
+     |           +--ro name                -> /schema-mounts/schema/name
+     |           +--ro parent-reference*   yang:xpath1.0
+     +--ro schema* [name]
+        +--ro name           string
+        +--ro module* [name revision]
+        |  +--ro name                yang:yang-identifier
+        |  +--ro revision            union
+        |  +--ro schema?             inet:uri
+        |  +--ro namespace           inet:uri
+        |  +--ro feature*            yang:yang-identifier
+        |  +--ro deviation* [name revision]
+        |  |  +--ro name        yang:yang-identifier
+        |  |  +--ro revision    union
+        |  +--ro conformance-type    enumeration
+        |  +--ro submodule* [name revision]
+        |     +--ro name        yang:yang-identifier
+        |     +--ro revision    union
+        |     +--ro schema?     inet:uri
+        +--ro mount-point* [module label]
+           +--ro module              yang:yang-identifier
+           +--ro label               yang:yang-identifier
+           +--ro config?             boolean
+           +--ro (schema-ref)
+              +--:(inline)
+              |  +--ro inline?       empty
+              +--:(use-schema)
+                 +--ro use-schema* [name]
+                    +--ro name                -> /schema-mounts/schema/name
+                    +--ro parent-reference*   yang:xpath1.0

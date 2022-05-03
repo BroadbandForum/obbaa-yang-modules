@@ -1,0 +1,29 @@
+module: bbf-obbaa-module-library-check
+  +--ro in-use-library-modules
+  |  +--ro module* [name revision]
+  |     +--ro name                   -> /yanglib:modules-state/module/name
+  |     +--ro revision               -> /yanglib:modules-state/module/revision
+  |     +--ro associated-adapters
+  |        +--ro device-adapter* [type interface-version model vendor]
+  |           +--ro type                                string
+  |           +--ro interface-version                   string
+  |           +--ro model                               string
+  |           +--ro vendor                              string
+  |           +--ro push-pma-configuration-to-device?   boolean
+  |           +--ro is-netconf?                         boolean
+  |           +--ro device-count?                       uint32
+  |           +--ro devices
+  |              +--ro device* [name]
+  |                 +--ro name    -> /network-manager:network-manager/managed-devices/device/name
+  +--ro device-library-modules
+     +--ro related-adapter
+     |  +--ro type?                               string
+     |  +--ro interface-version?                  string
+     |  +--ro model?                              string
+     |  +--ro vendor?                             string
+     |  +--ro push-pma-configuration-to-device?   boolean
+     |  +--ro is-netconf?                         boolean
+     +--ro in-use-library-modules
+        +--ro module* [name revision]
+           +--ro name        -> /yanglib:modules-state/module/name
+           +--ro revision    -> /yanglib:modules-state/module/revision

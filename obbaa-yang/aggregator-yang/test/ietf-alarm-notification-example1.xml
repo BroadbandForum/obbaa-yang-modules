@@ -1,0 +1,8 @@
+<al:alarm-notification xmlns:al="urn:ietf:params:xml:ns:yang:ietf-alarms">
+ <al:resource>/ietf-interfaces:interfaces/interface[name='enet_uni_ont1_1_1']</al:resource>
+ <al:alarm-type-id xmlns:bbf-obbaa-xpon-onu-alarm-types="urn:bbf:yang:obbaa:xpon-onu-alarm-types">bbf-obbaa-xpon-onu-alarm-types:signal-fail</al:alarm-type-id>
+ <al:alarm-type-qualifier></al:alarm-type-qualifier>
+ <al:time>2022-01-09T13:53:36+00:00</al:time>
+ <al:perceived-severity>major</al:perceived-severity>
+ <al:alarm-text>LOS - Loss of signal</al:alarm-text>
+</al:alarm-notification>

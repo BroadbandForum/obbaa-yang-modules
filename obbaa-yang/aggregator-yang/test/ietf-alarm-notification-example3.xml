@@ -1,0 +1,8 @@
+<al:alarm-notification xmlns:al="urn:ietf:params:xml:ns:yang:ietf-alarms">
+ <al:resource>/ietf-hardware:hardware/component[name='ontAniPort_ont1']</al:resource>
+ <al:alarm-type-id xmlns:bbf-hw-xcvr-alt="urn:bbf:yang:bbf-hardware-transceiver-alarm-types">bbf-hw-xcvr-alt:rx-power-low</al:alarm-type-id>
+ <al:alarm-type-qualifier></al:alarm-type-qualifier>
+ <al:time>2022-01-09T13:53:36+00:00</al:time>
+ <al:perceived-severity>cleared</al:perceived-severity>
+ <al:alarm-text>LOS - Loss of signal</al:alarm-text>
+</al:alarm-notification>

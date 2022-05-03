@@ -1,0 +1,203 @@
+module: bbf-vomci-proxy
+  +--rw managed-onus
+  |  +---x create-onu
+  |  |  +---w input
+  |  |     +---w name?   bbf-vomcit:onu-name
+  |  +--ro managed-onu* [name]
+  |     +--ro name                                   bbf-vomcit:onu-name
+  |     +---x delete-onu
+  |     +---x set-onu-communication
+  |     |  +---w input
+  |     |     +---w onu-communication-available?           boolean
+  |     |     +---w olt-remote-endpoint-name?              bbf-yang:string-ascii64
+  |     |     +---w vomci-function-remote-endpoint-name?   bbf-yang:string-ascii64
+  |     |     +---w onu-attachment-point
+  |     |        +---w olt-name?                   bbf-vomcit:olt-name
+  |     |        +---w channel-termination-name?   string
+  |     |        +---w onu-id?                     bbf-xpon-types:onu-id
+  |     +--ro onu-attachment-point
+  |     |  +--ro olt-name?                   bbf-vomcit:olt-name
+  |     |  +--ro channel-termination-name?   string
+  |     |  +--ro onu-id?                     bbf-xpon-types:onu-id
+  |     +--ro onu-communication-available?           boolean
+  |     +--ro olt-remote-endpoint-name?              bbf-yang:string-ascii64
+  |     +--ro vomci-function-remote-endpoint-name?   bbf-yang:string-ascii64
+  |     +--ro statistics
+  |        +---x reset
+  |        +--ro out-messages?                    bbf-yang:performance-counter64
+  |        +--ro in-messages?                     bbf-yang:performance-counter64
+  |        +--ro messages-errors?                 bbf-yang:performance-counter64
+  |        +--ro last-reset-time?                 yang:date-and-time
+  |        +--ro out-low-messages?                bbf-yang:performance-counter64
+  |        +--ro in-low-messages?                 bbf-yang:performance-counter64
+  |        +--ro low-messages-retransmissions?    bbf-yang:performance-counter64
+  |        +--ro out-high-messages?               bbf-yang:performance-counter64
+  |        +--ro in-high-messages?                bbf-yang:performance-counter64
+  |        +--ro high-messages-retransmissions?   bbf-yang:performance-counter64
+  |        +--ro min-onu-rtt?                     uint32
+  |        +--ro max-onu-rtt?                     uint32
+  +--rw vomci
+     +--rw vomci-msg-timeout?             uint16
+     +--rw omci-message-retransmission {bbf-omci-mr:omci-msg-retrans-supported}?
+     |  +--rw enabled?                     boolean
+     |  +--rw low-transmission-timeout?    uint16
+     |  +--rw high-transmission-timeout?   uint16
+     |  +--rw low-message-retry?           uint8
+     |  +--rw high-message-retry?          uint8
+     +--rw remote-network-function!
+     |  +--rw nf-client {bbf-vomci-proxy:nf-client-supported}?
+     |  |  +--rw enabled?       boolean
+     |  |  +--rw nf-initiate!
+     |  |     +--rw remote-endpoints
+     |  |        +--rw remote-endpoint* [name]
+     |  |           +--rw name                             bbf-yang:string-ascii64
+     |  |           +--rw nf-type?                         identityref
+     |  |           +--rw on-demand?                       boolean
+     |  |           +--rw local-endpoint-name?             bbf-yang:string-ascii64
+     |  |           +--rw (client-transport)
+     |  |           |  +--:(grpc) {bbf-nfc:grpc-client-supported}?
+     |  |           |  |  +--rw grpc
+     |  |           |  |     +--rw grpc-client-parameters
+     |  |           |  |        +--rw channel
+     |  |           |  |        |  +--rw ping-interval?   uint32
+     |  |           |  |        +--rw connection-backoff {bbf-grpc:connection-backoff-supported}?
+     |  |           |  |           +--rw initial-backoff?       uint16
+     |  |           |  |           +--rw min-connect-timeout?   uint16
+     |  |           |  |           +--rw multiplier?            decimal64
+     |  |           |  |           +--rw jitter?                decimal64
+     |  |           |  |           +--rw max-backoff?           uint16
+     |  |           |  +--:(kafka-agent) {bbf-nfc:kafka-agent-supported}?
+     |  |           |     +--rw kafka-agent
+     |  |           |        +--rw kafka-agent-parameters
+     |  |           |           +--rw client-id?                string
+     |  |           |           +--rw publication-parameters {bbf-kafkaa:publication-supported}?
+     |  |           |           |  +--rw topic* [name]
+     |  |           |           |     +--rw name         string
+     |  |           |           |     +--rw purpose?     string
+     |  |           |           |     +--rw partition?   string
+     |  |           |           +--rw consumption-parameters {bbf-kafkaa:consumption-supported}?
+     |  |           |              +--rw group-id?   string
+     |  |           |              +--rw topic* [name]
+     |  |           |                 +--rw name         string
+     |  |           |                 +--rw purpose?     string
+     |  |           |                 +--rw partition?   string
+     |  |           +--rw access-point* [name]
+     |  |           |  +--rw name                 bbf-yang:string-ascii64
+     |  |           |  +--rw (message-transport)
+     |  |           |     +--:(grpc) {bbf-nfc:grpc-client-supported}?
+     |  |           |     |  +--rw grpc
+     |  |           |     |     +--rw grpc-transport-parameters
+     |  |           |     |        +--rw remote-address    inet:host
+     |  |           |     |        +--rw remote-port?      inet:port-number
+     |  |           |     |        +--rw local-address?    inet:ip-address {local-binding-supported}?
+     |  |           |     |        +--rw local-port?       inet:port-number {local-binding-supported}?
+     |  |           |     |        +--rw proxy-server! {proxy-connect}?
+     |  |           |     |        |  +--rw (proxy-type)
+     |  |           |     |        |     +--:(socks4)
+     |  |           |     |        |     |  +--rw socks4-parameters
+     |  |           |     |        |     |     +--rw remote-address    inet:ip-address
+     |  |           |     |        |     |     +--rw remote-port?      inet:port-number
+     |  |           |     |        |     +--:(socks4a)
+     |  |           |     |        |     |  +--rw socks4a-parameters
+     |  |           |     |        |     |     +--rw remote-address    inet:host
+     |  |           |     |        |     |     +--rw remote-port?      inet:port-number
+     |  |           |     |        |     +--:(socks5)
+     |  |           |     |        |        +--rw socks5-parameters
+     |  |           |     |        |           +--rw remote-address               inet:host
+     |  |           |     |        |           +--rw remote-port?                 inet:port-number
+     |  |           |     |        |           +--rw authentication-parameters!
+     |  |           |     |        |              +--rw (auth-type)
+     |  |           |     |        |                 +--:(gss-api) {socks5-gss-api}?
+     |  |           |     |        |                 |  +--rw gss-api
+     |  |           |     |        |                 +--:(username-password) {socks5-username-password}?
+     |  |           |     |        |                    +--rw username-password
+     |  |           |     |        |                       +--rw username                    string
+     |  |           |     |        |                       +--rw (password-type)
+     |  |           |     |        |                          +--:(cleartext-password)
+     |  |           |     |        |                          |  +--rw cleartext-password?   string
+     |  |           |     |        |                          +--:(encrypted-password) {password-encryption}?
+     |  |           |     |        |                             +--rw encrypted-password
+     |  |           |     |        |                                +--rw encrypted-by
+     |  |           |     |        |                                +--rw encrypted-value    binary
+     |  |           |     |        +--rw keepalives! {keepalives-supported}?
+     |  |           |     |           +--rw idle-time         uint16
+     |  |           |     |           +--rw max-probes        uint16
+     |  |           |     |           +--rw probe-interval    uint16
+     |  |           |     +--:(kafka-agent) {bbf-nfc:kafka-agent-supported}?
+     |  |           |        +--rw kafka-agent
+     |  |           |           +--rw kafka-agent-transport-parameters
+     |  |           |              +--rw remote-address    inet:host
+     |  |           |              +--rw remote-port?      inet:port-number
+     |  |           |              +--rw local-address?    inet:ip-address {local-binding-supported}?
+     |  |           |              +--rw local-port?       inet:port-number {local-binding-supported}?
+     |  |           |              +--rw proxy-server! {proxy-connect}?
+     |  |           |              |  +--rw (proxy-type)
+     |  |           |              |     +--:(socks4)
+     |  |           |              |     |  +--rw socks4-parameters
+     |  |           |              |     |     +--rw remote-address    inet:ip-address
+     |  |           |              |     |     +--rw remote-port?      inet:port-number
+     |  |           |              |     +--:(socks4a)
+     |  |           |              |     |  +--rw socks4a-parameters
+     |  |           |              |     |     +--rw remote-address    inet:host
+     |  |           |              |     |     +--rw remote-port?      inet:port-number
+     |  |           |              |     +--:(socks5)
+     |  |           |              |        +--rw socks5-parameters
+     |  |           |              |           +--rw remote-address               inet:host
+     |  |           |              |           +--rw remote-port?                 inet:port-number
+     |  |           |              |           +--rw authentication-parameters!
+     |  |           |              |              +--rw (auth-type)
+     |  |           |              |                 +--:(gss-api) {socks5-gss-api}?
+     |  |           |              |                 |  +--rw gss-api
+     |  |           |              |                 +--:(username-password) {socks5-username-password}?
+     |  |           |              |                    +--rw username-password
+     |  |           |              |                       +--rw username                    string
+     |  |           |              |                       +--rw (password-type)
+     |  |           |              |                          +--:(cleartext-password)
+     |  |           |              |                          |  +--rw cleartext-password?   string
+     |  |           |              |                          +--:(encrypted-password) {password-encryption}?
+     |  |           |              |                             +--rw encrypted-password
+     |  |           |              |                                +--rw encrypted-by
+     |  |           |              |                                +--rw encrypted-value    binary
+     |  |           |              +--rw keepalives! {keepalives-supported}?
+     |  |           |                 +--rw idle-time         uint16
+     |  |           |                 +--rw max-probes        uint16
+     |  |           |                 +--rw probe-interval    uint16
+     |  |           +---n remote-endpoint-status-change
+     |  |              +-- access-point                         -> ../../access-point/name
+     |  |              +-- connected                            boolean
+     |  |              +-- remote-endpoint-state-last-change    yang:date-and-time
+     |  +--rw nf-server {bbf-vomci-proxy:nf-server-supported}?
+     |     +--rw enabled?   boolean
+     |     +--rw listen!
+     |        +--rw idle-timeout?      uint16
+     |        +--rw listen-endpoint* [name]
+     |           +--rw name                bbf-yang:string-ascii64
+     |           +--rw (transport)
+     |           |  +--:(grpc)
+     |           |     +--rw grpc
+     |           |        +--rw grpc-server-parameters
+     |           |           +--rw local-endpoint-name?   bbf-yang:string-ascii64
+     |           |           +--rw local-address          inet:ip-address
+     |           |           +--rw local-port?            inet:port-number
+     |           |           +--rw keepalives! {keepalives-supported}?
+     |           |              +--rw idle-time         uint16
+     |           |              +--rw max-probes        uint16
+     |           |              +--rw probe-interval    uint16
+     |           +--rw remote-endpoints
+     |              +--ro remote-endpoint* [name]
+     |              |  +--ro name    bbf-yang:string-ascii64
+     |              +---n remote-endpoint-status-change
+     |                 +-- remote-endpoint                      -> ../../../remote-endpoints/remote-endpoint/name
+     |                 +-- connected                            boolean
+     |                 +-- remote-endpoint-state-last-change    yang:date-and-time
+     +--ro statistics
+        +---x reset
+        +--ro last-reset-time?                 yang:date-and-time
+        +--ro out-low-messages?                bbf-yang:performance-counter64
+        +--ro in-low-messages?                 bbf-yang:performance-counter64
+        +--ro low-messages-retransmissions?    bbf-yang:performance-counter64
+        +--ro out-high-messages?               bbf-yang:performance-counter64
+        +--ro in-high-messages?                bbf-yang:performance-counter64
+        +--ro high-messages-retransmissions?   bbf-yang:performance-counter64
+        +--ro min-onu-rtt?                     uint32
+        +--ro max-onu-rtt?                     uint32

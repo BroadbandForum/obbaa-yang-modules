@@ -1,0 +1,240 @@
+module: bbf-obbaa-network-manager
+  +--rw network-manager
+     +--rw managed-devices
+     |  +--rw device* [name]
+     |     +--rw name                   string
+     |     +--rw device-management
+     |     |  +--rw type?                               string
+     |     |  +--rw interface-version?                  string
+     |     |  +--rw model?                              string
+     |     |  +--rw vendor?                             string
+     |     |  +--rw push-pma-configuration-to-device?   boolean
+     |     |  +--ro is-netconf?                         boolean
+     |     |  +--rw device-connection
+     |     |  |  +--rw connection-model?          enumeration
+     |     |  |  +--rw (protocol)
+     |     |  |     +--:(password-auth)
+     |     |  |     |  +--rw password-auth
+     |     |  |     |     +--rw authentication
+     |     |  |     |        +--rw address            inet:ip-address
+     |     |  |     |        +--rw management-port?   uint32
+     |     |  |     |        +--rw user-name?         string
+     |     |  |     |        +--rw password?          string
+     |     |  |     +--:(snmp-auth)
+     |     |  |     |  +--rw snmp-auth
+     |     |  |     |     +--rw snmp-authentication
+     |     |  |     |        +--rw address                   inet:ip-address
+     |     |  |     |        +--rw agent-port?               inet:port-number
+     |     |  |     |        +--rw trap-port?                inet:port-number
+     |     |  |     |        +--rw snmp-version?             enumeration
+     |     |  |     |        +--rw (auth-info)?
+     |     |  |     |           +--:(community-string)
+     |     |  |     |           |  +--rw community-string?   string
+     |     |  |     |           +--:(snmpv3-auth)
+     |     |  |     |              +--rw snmpv3-auth
+     |     |  |     |                 +--rw user-name?        string
+     |     |  |     |                 +--rw security-level?   enumeration
+     |     |  |     |                 +--rw auth-protocol?    enumeration
+     |     |  |     |                 +--rw auth-password?    string
+     |     |  |     |                 +--rw priv-protocol?    enumeration
+     |     |  |     |                 +--rw priv-password?    string
+     |     |  |     +--:(duid)
+     |     |  |     |  +--rw duid?                string
+     |     |  |     +--:(mediated-protocol)
+     |     |  |        +--rw mediated-protocol?   enumeration
+     |     |  +--ro device-state
+     |     |     +--ro configuration-alignment-state?   string
+     |     |     +--ro connection-state
+     |     |        +--ro connected?                  boolean
+     |     |        +--ro connection-creation-time?   yang:date-and-time
+     |     |        +--ro device-capability*          string
+     |     +--rw device-notification
+     |     |  +---n device-state-change
+     |     |     +-- event?   enumeration
+     |     +--rw root
+     +--rw network-functions-settings
+     |  +--rw nf-client {nf-client-supported}?
+     |  |  +--rw enabled?       boolean
+     |  |  +--rw nf-initiate!
+     |  |     +--rw remote-endpoints
+     |  |        +--rw remote-endpoint* [name]
+     |  |           +--rw name                             bbf-yang:string-ascii64
+     |  |           +--rw nf-type?                         identityref
+     |  |           +--rw on-demand?                       boolean
+     |  |           +--rw local-endpoint-name?             bbf-yang:string-ascii64
+     |  |           +--rw (client-transport)
+     |  |           |  +--:(grpc) {bbf-nfc:grpc-client-supported}?
+     |  |           |  |  +--rw grpc
+     |  |           |  |     +--rw grpc-client-parameters
+     |  |           |  |        +--rw channel
+     |  |           |  |        |  +--rw ping-interval?   uint32
+     |  |           |  |        +--rw connection-backoff {bbf-grpc:connection-backoff-supported}?
+     |  |           |  |           +--rw initial-backoff?       uint16
+     |  |           |  |           +--rw min-connect-timeout?   uint16
+     |  |           |  |           +--rw multiplier?            decimal64
+     |  |           |  |           +--rw jitter?                decimal64
+     |  |           |  |           +--rw max-backoff?           uint16
+     |  |           |  +--:(kafka-agent) {bbf-nfc:kafka-agent-supported}?
+     |  |           |     +--rw kafka-agent
+     |  |           |        +--rw kafka-agent-parameters
+     |  |           |           +--rw client-id?                string
+     |  |           |           +--rw publication-parameters {bbf-kafkaa:publication-supported}?
+     |  |           |           |  +--rw topic* [name]
+     |  |           |           |     +--rw name         string
+     |  |           |           |     +--rw purpose?     string
+     |  |           |           |     +--rw partition?   string
+     |  |           |           +--rw consumption-parameters {bbf-kafkaa:consumption-supported}?
+     |  |           |              +--rw group-id?   string
+     |  |           |              +--rw topic* [name]
+     |  |           |                 +--rw name         string
+     |  |           |                 +--rw purpose?     string
+     |  |           |                 +--rw partition?   string
+     |  |           +--rw access-point* [name]
+     |  |           |  +--rw name                 bbf-yang:string-ascii64
+     |  |           |  +--rw (message-transport)
+     |  |           |     +--:(grpc) {bbf-nfc:grpc-client-supported}?
+     |  |           |     |  +--rw grpc
+     |  |           |     |     +--rw grpc-transport-parameters
+     |  |           |     |        +--rw remote-address    inet:host
+     |  |           |     |        +--rw remote-port?      inet:port-number
+     |  |           |     |        +--rw local-address?    inet:ip-address {local-binding-supported}?
+     |  |           |     |        +--rw local-port?       inet:port-number {local-binding-supported}?
+     |  |           |     |        +--rw proxy-server! {proxy-connect}?
+     |  |           |     |        |  +--rw (proxy-type)
+     |  |           |     |        |     +--:(socks4)
+     |  |           |     |        |     |  +--rw socks4-parameters
+     |  |           |     |        |     |     +--rw remote-address    inet:ip-address
+     |  |           |     |        |     |     +--rw remote-port?      inet:port-number
+     |  |           |     |        |     +--:(socks4a)
+     |  |           |     |        |     |  +--rw socks4a-parameters
+     |  |           |     |        |     |     +--rw remote-address    inet:host
+     |  |           |     |        |     |     +--rw remote-port?      inet:port-number
+     |  |           |     |        |     +--:(socks5)
+     |  |           |     |        |        +--rw socks5-parameters
+     |  |           |     |        |           +--rw remote-address               inet:host
+     |  |           |     |        |           +--rw remote-port?                 inet:port-number
+     |  |           |     |        |           +--rw authentication-parameters!
+     |  |           |     |        |              +--rw (auth-type)
+     |  |           |     |        |                 +--:(gss-api) {socks5-gss-api}?
+     |  |           |     |        |                 |  +--rw gss-api
+     |  |           |     |        |                 +--:(username-password) {socks5-username-password}?
+     |  |           |     |        |                    +--rw username-password
+     |  |           |     |        |                       +--rw username                    string
+     |  |           |     |        |                       +--rw (password-type)
+     |  |           |     |        |                          +--:(cleartext-password)
+     |  |           |     |        |                          |  +--rw cleartext-password?   string
+     |  |           |     |        |                          +--:(encrypted-password) {password-encryption}?
+     |  |           |     |        |                             +--rw encrypted-password
+     |  |           |     |        |                                +--rw encrypted-by
+     |  |           |     |        |                                +--rw encrypted-value    binary
+     |  |           |     |        +--rw keepalives! {keepalives-supported}?
+     |  |           |     |           +--rw idle-time         uint16
+     |  |           |     |           +--rw max-probes        uint16
+     |  |           |     |           +--rw probe-interval    uint16
+     |  |           |     +--:(kafka-agent) {bbf-nfc:kafka-agent-supported}?
+     |  |           |        +--rw kafka-agent
+     |  |           |           +--rw kafka-agent-transport-parameters
+     |  |           |              +--rw remote-address    inet:host
+     |  |           |              +--rw remote-port?      inet:port-number
+     |  |           |              +--rw local-address?    inet:ip-address {local-binding-supported}?
+     |  |           |              +--rw local-port?       inet:port-number {local-binding-supported}?
+     |  |           |              +--rw proxy-server! {proxy-connect}?
+     |  |           |              |  +--rw (proxy-type)
+     |  |           |              |     +--:(socks4)
+     |  |           |              |     |  +--rw socks4-parameters
+     |  |           |              |     |     +--rw remote-address    inet:ip-address
+     |  |           |              |     |     +--rw remote-port?      inet:port-number
+     |  |           |              |     +--:(socks4a)
+     |  |           |              |     |  +--rw socks4a-parameters
+     |  |           |              |     |     +--rw remote-address    inet:host
+     |  |           |              |     |     +--rw remote-port?      inet:port-number
+     |  |           |              |     +--:(socks5)
+     |  |           |              |        +--rw socks5-parameters
+     |  |           |              |           +--rw remote-address               inet:host
+     |  |           |              |           +--rw remote-port?                 inet:port-number
+     |  |           |              |           +--rw authentication-parameters!
+     |  |           |              |              +--rw (auth-type)
+     |  |           |              |                 +--:(gss-api) {socks5-gss-api}?
+     |  |           |              |                 |  +--rw gss-api
+     |  |           |              |                 +--:(username-password) {socks5-username-password}?
+     |  |           |              |                    +--rw username-password
+     |  |           |              |                       +--rw username                    string
+     |  |           |              |                       +--rw (password-type)
+     |  |           |              |                          +--:(cleartext-password)
+     |  |           |              |                          |  +--rw cleartext-password?   string
+     |  |           |              |                          +--:(encrypted-password) {password-encryption}?
+     |  |           |              |                             +--rw encrypted-password
+     |  |           |              |                                +--rw encrypted-by
+     |  |           |              |                                +--rw encrypted-value    binary
+     |  |           |              +--rw keepalives! {keepalives-supported}?
+     |  |           |                 +--rw idle-time         uint16
+     |  |           |                 +--rw max-probes        uint16
+     |  |           |                 +--rw probe-interval    uint16
+     |  |           +---n remote-endpoint-status-change
+     |  |              +-- access-point                         -> ../../access-point/name
+     |  |              +-- connected                            boolean
+     |  |              +-- remote-endpoint-state-last-change    yang:date-and-time
+     |  +--rw nf-server {nf-server-supported}?
+     |     +--rw enabled?   boolean
+     |     +--rw listen!
+     |        +--rw idle-timeout?      uint16
+     |        +--rw listen-endpoint* [name]
+     |           +--rw name                bbf-yang:string-ascii64
+     |           +--rw (transport)
+     |           |  +--:(grpc)
+     |           |     +--rw grpc
+     |           |        +--rw grpc-server-parameters
+     |           |           +--rw local-endpoint-name?   bbf-yang:string-ascii64
+     |           |           +--rw local-address          inet:ip-address
+     |           |           +--rw local-port?            inet:port-number
+     |           |           +--rw keepalives! {keepalives-supported}?
+     |           |              +--rw idle-time         uint16
+     |           |              +--rw max-probes        uint16
+     |           |              +--rw probe-interval    uint16
+     |           +--rw remote-endpoints
+     |              +--ro remote-endpoint* [name]
+     |              |  +--ro name    bbf-yang:string-ascii64
+     |              +---n remote-endpoint-status-change
+     |                 +-- remote-endpoint                      -> ../../../remote-endpoints/remote-endpoint/name
+     |                 +-- connected                            boolean
+     |                 +-- remote-endpoint-state-last-change    yang:date-and-time
+     +--rw network-functions
+     |  +--rw network-function* [name]
+     |     +--rw name                    string
+     |     +--rw type?                   identityref
+     |     +--rw remote-endpoint-name?   string
+     |     +--rw root
+     +--ro new-devices
+     |  +--ro new-device* [duid]
+     |     +--ro duid                 string
+     |     +--ro device-capability*   string
+     +--ro device-adapters
+        +--ro device-adapter-count?   string
+        +--ro device-adapter* [type interface-version model vendor]
+           +--ro type                                string
+           +--ro interface-version                   string
+           +--ro model                               string
+           +--ro vendor                              string
+           +--ro push-pma-configuration-to-device?   boolean
+           +--ro is-netconf?                         boolean
+           +--ro description?                        string
+           +--ro developer?                          string
+           +--ro revision?                           string
+           +--ro upload-date?                        yang:date-and-time
+           +--ro in-use?                             boolean
+           +--ro devices-related
+           |  +--ro device-count?   uint32
+           |  +--ro device* [name]
+           |     +--ro name    -> /network-manager/managed-devices/device/name
+           +--ro yang-modules
+           |  +--ro module* [name revision]
+           |     +--ro name        -> /yanglib:modules-state/module/name
+           |     +--ro revision    -> /yanglib:modules-state/module/revision
+           +--ro factory-garment-tag
+              +--ro total-number-of-modules-present?                   string
+              +--ro number-of-modules-present-in-standard-adapter?     string
+              +--ro percentage-adherence-to-standard-module?           string
+              +--ro deviated-standard-module*                          string
+              +--ro percentage-of-standard-modules-having-deviation?   string
+              +--ro augmented-standard-module*                         string
+              +--ro percentage-of-standard-modules-having-augments?    string

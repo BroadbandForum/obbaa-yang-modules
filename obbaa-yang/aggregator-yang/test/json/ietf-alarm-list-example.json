@@ -1,0 +1,56 @@
+{
+  "ietf-alarms:alarms": {
+    "alarm-list": {
+      "number-of-alarms": 3,
+      "last-changed": "2022-01-09T14:00:00+00:00",
+      "alarm": [
+        {
+          "resource": "/ietf-interfaces:interfaces/interface[name='eth0']",
+          "alarm-type-id": "bbf-alarm-types:bbf-alarm-type-id",
+          "alarm-type-qualifier": "",
+          "status-change": [
+            {
+              "time": "2022-01-09T14:00:00+00:00",
+              "perceived-severity": "major",
+              "alarm-text": "example alarm"
+            },
+            {
+              "time": "2022-01-09T13:00:00+00:00",
+              "perceived-severity": "cleared",
+              "alarm-text": "example alarm"
+            },
+            {
+              "time": "2022-01-09T12:00:00+00:00",
+              "perceived-severity": "major",
+              "alarm-text": "example alarm"
+            }
+          ]
+        },
+        {
+          "resource": "/ietf-interfaces:interfaces/interface[name='eth1']",
+          "alarm-type-id": "bbf-alarm-types:bbf-alarm-type-id",
+          "alarm-type-qualifier": "",
+          "status-change": [
+            {
+              "time": "2022-01-09T13:00:00+00:00",
+              "perceived-severity": "major",
+              "alarm-text": "example alarm"
+            }
+          ]
+        },
+        {
+          "resource": "/ietf-interfaces:interfaces/interface[name='eth2']",
+          "alarm-type-id": "bbf-alarm-types:bbf-alarm-type-id",
+          "alarm-type-qualifier": "",
+          "status-change": [
+            {
+              "time": "2022-01-09T12:00:00+00:00",
+              "perceived-severity": "major",
+              "alarm-text": "example alarm"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

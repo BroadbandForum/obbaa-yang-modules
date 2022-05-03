@@ -1,0 +1,26 @@
+module: bbf-obbaa-network-function-state
+
+  augment /baa-network-manager:network-manager:
+    +--ro network-functions-state
+       +--ro virtual-network-function* [name]
+       |  +--ro name                     bbf-yang:string-ascii64
+       |  +--ro vendor?                  bbf-yang:string-ascii64
+       |  +--ro software-version?        bbf-yang:string-ascii64
+       |  +--ro network-function-type?   identityref
+       |  +--ro hosting-environment
+       |  |  +--ro api-type-description?   string
+       |  |  +--ro api-version?            string
+       |  |  +--ro date-time-created?      yang:date-and-time
+       |  +--ro consuming-entities
+       |  |  +--ro compatible-consumers
+       |  |     +--ro consumer* [consumer-type consumer-component]
+       |  |        +--ro consumer-type         bbf-yang:string-ascii64
+       |  |        +--ro consumer-component    bbf-yang:string-ascii64
+       |  +--ro usage?                   string
+       +--ro virtual-network-function-instance* [name]
+          +--ro name                        bbf-yang:string-ascii64
+          +--ro virtual-network-function?   bbf-yang:string-ascii64
+          +--ro admin-state?                bbf-node-types:admin-state
+          +--ro admin-state-last-changed?   yang:date-and-time
+          +--ro oper-state?                 enumeration
+          +--ro oper-state-last-changed?    yang:date-and-time

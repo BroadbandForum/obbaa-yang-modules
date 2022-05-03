@@ -1,0 +1,189 @@
+module bbf-obbaa-mfc-conf {
+  yang-version 1.1;
+  namespace "urn:bbf:yang:obbaa:mfc-conf";
+  prefix baa-mfc-conf;
+
+  import ietf-interfaces {
+    prefix if;
+  }
+  import bbf-sub-interfaces {
+    prefix bbf-subif;
+  }
+  import bbf-nf-client {
+    prefix bbf-nf-client;
+  }
+  import bbf-nf-server {
+    prefix bbf-nf-server;
+  }
+
+  organization
+    "Broadband Forum <https://www.broadband-forum.org>";
+    
+  contact
+     "Comments or questions about this Broadband Forum YANG module
+     should be directed to <mailto:obbaa-leaders@broadband-forum.org>.
+    ";
+    
+  description
+     "This module contains a collection of YANG definitions for supporting
+     relay of control packets in Access Nodes.
+     
+     Copyright 2020 Broadband Forum
+     
+     Licensed under the Apache License, Version 2.0 (the \"License\");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+     
+     http://www.apache.org/licenses/LICENSE-2.0
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an \"AS IS\" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+    ";
+
+  revision 2020-08-17 {
+    description
+      "Initial revision.";
+    
+    reference
+       "OB-BAA User Documentation
+       <https://obbaa-broadband-forum.org>";
+  }
+  
+  feature control-relay {
+    description
+      "This feature indicates whether the network element supports
+       the ability to relay packets to an external entity via a dedicated
+       channel - the control relay interface.";
+  }
+  
+  typedef control-relay-action  {
+    type enumeration {
+      enum redirect {
+        description
+          "Redirect the packet to the control relay interface.";
+      }
+      enum copy {
+        description
+          "Make a copy of the packet to the control relay interface and 
+           continue normal processing.";
+      }
+    }
+    description
+      "Specifies the control relay action";
+  }
+  
+  feature nf-client-supported {
+     if-feature "control-relay";
+     description
+       "Indicates that client connectivity to network function's
+        endpoints is supported.";
+   }
+
+   feature nf-server-supported {
+     if-feature "control-relay";
+     description
+       "Indicates that server connectivity for network function's
+        endpoints is supported.";
+   }
+
+   container remote-nf-settings {
+     presence "Enables access to remote network functions";
+     description
+       "Container for remote network function settings";
+     container nf-client {
+       if-feature "nf-client-supported";
+       description
+         "Container for client network function settings";
+       leaf enabled {
+         type boolean;
+         default "true";
+         description
+           "Administratively enable the use of the client connectivity
+            capability to the network function.";
+       }
+       container client-parameters {
+         uses bbf-nf-client:nf-endpoint-grouping;
+         description
+           "Container for network function client configuration.";
+       }
+     }
+     //nf-client
+     
+     container nf-server {
+       if-feature "nf-server-supported";
+       description
+         "Container for server network function settings";
+       leaf enabled {
+         type boolean;
+         default "true";
+         description
+           "Administratively enable the use of the server connectivity
+            capability for connecting network function.";
+       }
+       container server-parameters {
+         uses bbf-nf-server:nf-server-grouping;
+         description
+           "Container for network function server configuration.";
+       }
+     }
+     //nf-server
+   }
+   //remote-nf-settings
+
+  
+  
+  augment "/if:interfaces/if:interface/bbf-subif:frame-processing/"
+        + "bbf-subif:inline-frame-processing/bbf-subif:inline-"
+        + "frame-processing/bbf-subif:ingress-rule/bbf-subif:rule" {
+    if-feature "control-relay";
+     
+    description
+      "Control relay configuration.";
+
+    container control-relay {
+       presence 
+          "If present this is a control relay rule.";
+       
+       description
+         "Control relay configuration.";
+       
+       leaf action {
+         type control-relay-action;
+         default "redirect";
+         description
+           "Specify an action to be applied to packts matching this
+            rule";
+       }
+       choice resulting-endpoint {
+         case client-endpoint {
+            leaf client-endpoint {
+               if-feature "nf-client-supported";
+               type leafref {
+                 path "/remote-nf-settings/nf-client/client-parameters/"
+                    + "nf-initiate/remote-endpoints/name";
+               }
+               mandatory true;
+               description
+                "The endpoint to which the packet will redirected or copied.";
+            }
+         }
+         case server-endpoint {
+            leaf server-endpoint {
+               if-feature "nf-server-supported";
+               type leafref {
+                 path "/remote-nf-settings/nf-server/server-parameters/"
+                    + "listen/remote-endpoints/name";
+                 require-instance "false";
+               }
+               mandatory true;
+               description
+                "The endpoint to which the packet will redirected or copied.";
+            }
+         }
+       }
+    }
+   
+  }  
+}

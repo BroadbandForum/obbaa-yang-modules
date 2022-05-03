@@ -1,0 +1,6 @@
+module: bbf-obbaa-pma-device-config
+  +--rw pma-device-config
+     +---x align
+     |  +---w input
+     |     +---w force?   identityref
+     +--ro alignment-state?   enumeration

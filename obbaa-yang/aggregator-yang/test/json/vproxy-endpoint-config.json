@@ -1,0 +1,96 @@
+{
+  "bbf-vomci-proxy:vomci": {
+    "remote-network-function": {
+      "nf-client": {
+        "enabled": true,
+        "nf-initiate": {
+          "remote-endpoints": {
+            "remote-endpoint": [
+              {
+                "name": "vOLTMF_Kafka_2",
+                "nf-type": "bbf-network-function-types:voltmf-type",
+                "local-endpoint-name": "proxy-kfk-1",
+                "kafka-agent": {
+                  "kafka-agent-parameters": {
+                    "client-id": "client-id3",
+                    "publication-parameters": {
+                      "topic": [
+                        {
+                          "name": "vomci-proxy-request",
+                          "purpose": "VOMCI_RESPONSE"
+                        },
+                        {
+                          "name": "vomci-proxy-notification",
+                          "purpose": "VOMCI_NOTIFICATION"
+                        }
+                      ]
+                    },
+                    "consumption-parameters": {
+                      "topic": [
+                        {
+                          "name": "vomci-proxy-request",
+                          "purpose": "VOMCI_REQUEST"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "access-point": [
+                  {
+                    "name": "vOLTMF_Kafka_2",
+                    "kafka-agent": {
+                      "kafka-agent-transport-parameters": {
+                        "remote-address": "kafka-host",
+                        "remote-port": 9092
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "name": "vOMCI-grpc-1",
+                "nf-type": "bbf-network-function-types:vomci-function-type",
+                "local-endpoint-name": "proxy-grpc-2",
+                "grpc": {
+                  "grpc-client-parameters": {
+                    "channel": {
+                      "ping-interval": 300
+                    }
+                  }
+                },
+                "access-point": [
+                  {
+                    "name": "vOMCI-grpc-1",
+                    "grpc": {
+                      "grpc-transport-parameters": {
+                        "remote-address": "vomci-host",
+                        "remote-port": 8100
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "nf-server": {
+        "enabled": true,
+        "listen": {
+          "listen-endpoint": [
+            {
+              "name": "proxy-grpc-2",
+              "grpc": {
+                "grpc-server-parameters": {
+                  "local-endpoint-name": "proxy-grpc-2",
+                  "local-address": "::",
+                  "local-port": 8433
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

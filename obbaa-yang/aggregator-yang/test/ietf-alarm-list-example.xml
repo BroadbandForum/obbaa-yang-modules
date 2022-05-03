@@ -1,0 +1,46 @@
+<al:alarms xmlns:al="urn:ietf:params:xml:ns:yang:ietf-alarms">
+      <al:alarm-list>
+        <al:number-of-alarms>3</al:number-of-alarms>
+        <al:last-changed>2022-01-09T14:00:00+00:00</al:last-changed>
+        <al:alarm>
+           <al:resource>/ietf-interfaces:interfaces/interface[name='eth0']</al:resource>
+           <al:alarm-type-id xmlns:bbf-alt="urn:bbf:yang:bbf-alarm-types">bbf-alt:bbf-alarm-type-id</al:alarm-type-id>
+           <al:alarm-type-qualifier></al:alarm-type-qualifier>
+           <al:status-change>
+              <al:time>2022-01-09T14:00:00+00:00</al:time>
+              <al:perceived-severity>major</al:perceived-severity>
+              <al:alarm-text>example alarm</al:alarm-text>
+           </al:status-change>           
+           <al:status-change>
+              <al:time>2022-01-09T13:00:00+00:00</al:time>
+              <al:perceived-severity>cleared</al:perceived-severity>
+              <al:alarm-text>example alarm</al:alarm-text>
+           </al:status-change>
+           <al:status-change>
+              <al:time>2022-01-09T12:00:00+00:00</al:time>
+              <al:perceived-severity>major</al:perceived-severity>
+              <al:alarm-text>example alarm</al:alarm-text>
+           </al:status-change>
+        </al:alarm>
+        <al:alarm>
+          <al:resource>/ietf-interfaces:interfaces/interface[name='eth1']</al:resource>
+           <al:alarm-type-id xmlns:bbf-alt="urn:bbf:yang:bbf-alarm-types">bbf-alt:bbf-alarm-type-id</al:alarm-type-id>
+           <al:alarm-type-qualifier></al:alarm-type-qualifier>
+           <al:status-change>
+              <al:time>2022-01-09T13:00:00+00:00</al:time>
+              <al:perceived-severity>major</al:perceived-severity>
+              <al:alarm-text>example alarm</al:alarm-text>
+           </al:status-change>           
+        </al:alarm>
+        <al:alarm>
+          <al:resource>/ietf-interfaces:interfaces/interface[name='eth2']</al:resource>
+           <al:alarm-type-id xmlns:bbf-alt="urn:bbf:yang:bbf-alarm-types">bbf-alt:bbf-alarm-type-id</al:alarm-type-id>
+           <al:alarm-type-qualifier></al:alarm-type-qualifier>
+           <al:status-change>
+              <al:time>2022-01-09T12:00:00+00:00</al:time>
+              <al:perceived-severity>major</al:perceived-severity>
+              <al:alarm-text>example alarm</al:alarm-text>
+           </al:status-change>
+        </al:alarm>
+      </al:alarm-list>
+    </al:alarms>

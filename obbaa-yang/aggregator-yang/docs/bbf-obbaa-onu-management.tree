@@ -1,0 +1,71 @@
+module: bbf-obbaa-onu-management
+
+  augment /baa-network-manager:network-manager/baa-network-manager:managed-devices/baa-network-manager:device/baa-network-manager:device-management:
+    +--rw onu-config-info
+       +--rw vendor-name?                   string
+       +--rw expected-serial-number?        bbf-xpon-types:onu-serial-number
+       +--rw expected-registration-id?      bbf-xpon-types:onu-registration-id
+       +--rw xpon-technology?               identityref
+       +--rw planned-onu-management-mode?   identityref
+       +--rw expected-attachment-points
+       |  +--rw list-type?                   enumeration
+       |  +--rw expected-attachment-point* [name]
+       |     +--rw name                                       string
+       |     +--rw olt-name                                   -> /baa-network-manager:network-manager/managed-devices/device/name
+       |     +--rw channel-partition-name?                    string
+       |     +--rw planned-onu-management-mode-in-this-olt?   identityref
+       +--rw vomci-onu-management
+          +--rw use-vomci-management?             boolean
+          +--rw onu-management-chain-selection?   bbf-vomcit:onu-management-chain-selection
+          +--rw vomci-function?                   bbf-yang:string-ascii64
+          +--rw onu-management-chain* [nf-type nf-name]
+          |  +--rw nf-type    bbf-vomcit:vomci-entity-type
+          |  +--rw nf-name    bbf-yang:string-ascii64
+          +--rw network-function-links
+             +--rw network-function-link* [name]
+                +--rw name                   string
+                +--rw termination-point-a
+                |  +--rw function-name          string
+                |  +--rw local-endpoint-name    string
+                +--rw termination-point-b
+                   +--rw function-name          string
+                   +--rw local-endpoint-name    string
+  augment /baa-network-manager:network-manager/baa-network-manager:managed-devices/baa-network-manager:device/baa-network-manager:device-management/baa-network-manager:device-state:
+    +--ro onu-state-info
+       +--ro onu-state                         identityref
+       +--ro determined-onu-management-mode?   identityref
+       +--ro detected-serial-number?           bbf-xpon-types:onu-serial-number
+       +--ro detected-registration-id?         bbf-xpon-types:onu-registration-id
+       +--ro vendor-id?                        string
+       +--ro equipment-id?                     string
+       +--ro attachment-point
+       |  +--ro olt-name                    string
+       |  +--ro channel-termination-name    string
+       |  +--ro onu-id?                     bbf-xpon-types:onu-id
+       |  +--ro v-ani-name?                 string
+       |  +--ro olt-local-onu-name?         string
+       +--ro software-images
+       |  +--ro software-image* [id]
+       |     +--ro id              uint8
+       |     +--ro version?        string
+       |     +--ro is-committed    boolean
+       |     +--ro is-active       boolean
+       |     +--ro is-valid        boolean
+       |     +--ro product-code?   string
+       |     +--ro hash?           string
+       +--ro voltmf-msg-data
+          +--ro in-messages?       bbf-yang:performance-counter64
+          +--ro out-messages?      bbf-yang:performance-counter64
+          +--ro messages-errors?   bbf-yang:performance-counter64
+
+  notifications:
+    +---n onu-authentication-report-notification
+       +--ro onu-authentication-status    identityref
+       +--ro olt-name                     string
+       +--ro channel-termination-name     string
+       +--ro onu-id?                      bbf-xpon-types:onu-id
+       +--ro detected-serial-number?      bbf-xpon-types:onu-serial-number
+       +--ro detected-registration-id?    bbf-xpon-types:onu-registration-id
+       +--ro v-ani-name?                  string
+       +--ro olt-local-onu-name?          string
+       +--ro onu-name?                    string
