@@ -26,6 +26,10 @@ module bbf-obbaa-onu-management {
       prefix baa-xpon-onu-types;
     }
     
+    import bbf-obbaa-pmaa-onu-types {
+      prefix baa-pmaa-onu-types;
+    }
+    
     import bbf-yang-types {
        prefix bbf-yang;
     }
@@ -615,7 +619,7 @@ module bbf-obbaa-onu-management {
        
        leaf onu-authentication-status {
           type identityref {
-             base baa-xpon-onu-types:onu-authentication-notification-base;
+             base baa-pmaa-onu-types:onu-authentication-notification-base;
           }
           mandatory true;
           description 

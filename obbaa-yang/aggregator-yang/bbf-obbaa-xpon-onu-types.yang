@@ -34,6 +34,13 @@ module bbf-obbaa-xpon-onu-types {
        See the License for the specific language governing permissions and
        limitations under the License. 
       ";
+   
+    revision 2022-05-24 {
+      description
+        "Moved PMAA related types to a new YANG module.";
+      reference
+        "https://obbaa.broadband-forum.org/";
+    }
     
     revision 2021-11-10 {
       description
@@ -135,92 +142,5 @@ module bbf-obbaa-xpon-onu-types {
     reference
       "WT-489";
   }
-
-
-  identity onu-authentication-notification-base {
-    description
-      "Base type for ONU authentication related notifications.";
-  }
-
-  identity unable-to-authenticate-onu {
-    base onu-authentication-notification-base;
-    description 
-      "Neither the OLT or BAA were able to authenticate the ONU.";
-  }
   
-  identity vomci-expected-by-olt-but-pmaa-missing-onu-configuration {
-     base onu-authentication-notification-base;
-     description 
-       "BAA has received a notification from the OLT indicating successful 
-       ONU authentication and the expectation that the ONU is to be 
-       managed via vOMCI, however BAA does not have any matching ONU
-       configured.";
-  }
-  
-  identity vomci-expected-by-olt-but-inconsistent-pmaa-mgmt-mode {
-     base onu-authentication-notification-base;
-     description 
-       "BAA has received a notification from the OLT indicating successful 
-       ONU authentication and the expectation that the ONU is to be 
-       managed via vOMCI, however BAA does not expect vOMCI to be used.";
-  }
-  
-  identity eomci-used-by-olt-conflicting-with-pmaa-mgmt-mode-for-this-olt {
-     base onu-authentication-notification-base;
-     description 
-       "BAA has received a notification from the OLT indicating successful 
-       ONU authentication and the expectation that the ONU is to be 
-       managed via embedded OMCI (eOMCI), however BAA does not expect eOMCI
-       to be used.";
-  }
-  
-  identity onu-authenticated-and-mgt-mode-determined {
-     base onu-authentication-notification-base;
-     description 
-       "Report that the ONU has been successfully authenticated 
-       and its management mode unambiguously determined as eOMCI 
-       or vOMCI.";
-   }
-
-  identity action-error-tag {
-    description
-      "A base identity for defining failures with the 
-       invocation of an action";
-  }
-
-  identity parameter-error {
-    base action-error-tag;
-    description
-      "Parameter error.";
-  }
-
-  identity onu-not-present {
-    base parameter-error;
-    description
-      "Indicates what the Optical Network Unit (ONU) is
-       not present or not present anymore on the channel 
-       termination.";
-  }
-
-  identity onu-management-mode-mismatch-with-v-ani {
-    base parameter-error;
-    description
-      "Indicates that the required ONU management mode 
-       conflicts with an explicitely configured 
-       'planned-onu-magement-mode' on the vANI.";
-  }
-
-  identity onu-name-mismatch-with-v-ani {
-    base parameter-error;
-    description
-      "Indicates that the provided 'onu-name' 
-       conflicts with an explicitely configured 
-       'onu-name' on the vANI.";
-  }
-
-  identity undetermined-error {
-    base action-error-tag;
-    description
-      "Undetermined error.";
-  }
 }

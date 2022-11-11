@@ -756,13 +756,13 @@
    <conformance-type>implement</conformance-type>
 </module>
 <module>
-   <name>ietf-routing-types@2017-12-04</name>
+   <name>ietf-routing-types</name>
    <revision>2017-12-04</revision>
    <namespace>urn:ietf:params:xml:ns:yang:ietf-routing-types</namespace>
    <conformance-type>implement</conformance-type>
 </module>
 <module>
-   <name>ietf-pseudowires@2018-10-22</name>
+   <name>ietf-pseudowires</name>
    <revision>2018-10-22</revision>
    <namespace>urn:ietf:params:xml:ns:yang:ietf-pseudowires</namespace>
    <conformance-type>implement</conformance-type>
