@@ -1,0 +1,85 @@
+module: ietf-l2-topology
+
+  augment /nw:networks/nw:network/nw:network-types:
+    +--rw l2-topology!
+  augment /nw:networks/nw:network:
+    +--rw l2-topology-attributes
+       +--rw name?    string
+       +--rw flags*   l2-flag-type
+  augment /nw:networks/nw:network/nw:node:
+    +--rw l2-node-attributes
+       +--rw name?                 string
+       +--rw flags*                node-flag-type
+       +--rw bridge-id*            string
+       +--rw management-address*   inet:ip-address
+       +--rw management-mac?       yang:mac-address
+       +--rw management-vlan?      string
+  augment /nw:networks/nw:network/nt:link:
+    +--rw l2-link-attributes
+       +--rw name?        string
+       +--rw flags*       link-flag-type
+       +--rw rate?        uint64
+       +--rw delay?       uint32
+       +--rw auto-nego?   boolean
+       +--rw duplex?      duplex-mode
+  augment /nw:networks/nw:network/nw:node/nt:termination-point:
+    +--rw l2-termination-point-attributes
+       +--rw interface-name?       string
+       +--rw mac-address?          yang:mac-address
+       +--rw port-number*          uint32
+       +--rw unnumbered-id*        uint32
+       +--rw encapsulation-type?   identityref
+       +--rw outer-tag?            dot1q-types:vid-range-type {VLAN}?
+       +--rw outer-tpid?           dot1q-types:dot1q-tag-type {QinQ}?
+       +--rw inner-tag?            dot1q-types:vid-range-type {VLAN}?
+       +--rw inner-tpid?           dot1q-types:dot1q-tag-type {QinQ}?
+       +--rw lag?                  boolean
+       +--rw member-link-tp*       -> /nw:networks/network/node/nt:termination-point/tp-id
+       +--rw vxlan {VXLAN}?
+          +--rw vni-id?   vni
+
+  notifications:
+    +---n l2-node-event
+    |  +--ro event-type?           l2-network-event-type
+    |  +--ro node-ref?             -> /nw:networks/network[nw:network-id=current()/../network-ref]/node/node-id
+    |  +--ro network-ref?          -> /nw:networks/network/network-id
+    |  +--ro l2-topology!
+    |  +--ro l2-node-attributes
+    |     +--ro name?                 string
+    |     +--ro flags*                node-flag-type
+    |     +--ro bridge-id*            string
+    |     +--ro management-address*   inet:ip-address
+    |     +--ro management-mac?       yang:mac-address
+    |     +--ro management-vlan?      string
+    +---n l2-link-event
+    |  +--ro event-type?           l2-network-event-type
+    |  +--ro link-ref?             -> /nw:networks/network[nw:network-id=current()/../network-ref]/nt:link/link-id
+    |  +--ro network-ref?          -> /nw:networks/network/network-id
+    |  +--ro l2-topology!
+    |  +--ro l2-link-attributes
+    |     +--ro name?        string
+    |     +--ro flags*       link-flag-type
+    |     +--ro rate?        uint64
+    |     +--ro delay?       uint32
+    |     +--ro auto-nego?   boolean
+    |     +--ro duplex?      duplex-mode
+    +---n l2-termination-point-event
+       +--ro event-type?                        l2-network-event-type
+       +--ro tp-ref?                            -> /nw:networks/network[nw:network-id=current()/../network-ref]/node[nw:node-id=current()/../node-ref]/nt:termination-point/tp-id
+       +--ro node-ref?                          -> /nw:networks/network[nw:network-id=current()/../network-ref]/node/node-id
+       +--ro network-ref?                       -> /nw:networks/network/network-id
+       +--ro l2-topology!
+       +--ro l2-termination-point-attributes
+          +--ro interface-name?       string
+          +--ro mac-address?          yang:mac-address
+          +--ro port-number*          uint32
+          +--ro unnumbered-id*        uint32
+          +--ro encapsulation-type?   identityref
+          +--ro outer-tag?            dot1q-types:vid-range-type {VLAN}?
+          +--ro outer-tpid?           dot1q-types:dot1q-tag-type {QinQ}?
+          +--ro inner-tag?            dot1q-types:vid-range-type {VLAN}?
+          +--ro inner-tpid?           dot1q-types:dot1q-tag-type {QinQ}?
+          +--ro lag?                  boolean
+          +--ro member-link-tp*       -> /nw:networks/network/node/nt:termination-point/tp-id
+          +--ro vxlan {VXLAN}?
+             +--ro vni-id?   vni

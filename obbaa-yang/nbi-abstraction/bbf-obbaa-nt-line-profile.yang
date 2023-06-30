@@ -1,0 +1,172 @@
+module bbf-obbaa-nt-line-profile {
+  yang-version 1.1;
+  namespace "urn:bbf:yang:obbaa:nt-line-profile";
+  prefix bbf-nt-line-prof;
+
+  organization
+    "Broadband Forum <https://www.broadband-forum.org>";
+
+  contact
+    "Comments or questions about this Broadband Forum YANG module
+     should be directed to <mailto:obbaa-leaders@broadband-forum.org>.
+    ";
+
+  description
+    "This module contains a collection of line profile definitions that
+     are applicable to the NBI Model of BAA, and simplify the L2 service
+     configuration.
+
+     Copyright 2022 Broadband Forum
+
+     Licensed under the Apache License, Version 2.0 (the \"License\");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an \"AS IS\" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+     ";
+
+  revision 2021-09-14 {
+    description
+      "Initial revision.";
+    reference
+      "";
+  }
+
+  typedef line-profile-ref {
+    type leafref {
+      path
+        "/bbf-nt-line-prof:line-profiles/bbf-nt-line-prof:line-profile/bbf-nt-line-prof:name";
+    }
+    description
+      "A reference to a network termination line profile.";
+  }
+
+  typedef line-bandwidth-ref {
+    type leafref {
+      path
+        "/bbf-nt-line-prof:line-bandwidth-profiles/bbf-nt-line-prof:line-bandwidth-profile/bbf-nt-line-prof:name";
+    }
+    description
+      "A reference to a network termination bandwidth profile.";
+  }
+
+  container line-bandwidth-profiles {
+    leaf name {
+      type string {
+        length "1..32";
+      }
+      description
+        "The line bandwidth profile name.";
+    }
+    list line-bandwidth-profile {
+      key "name";
+      description
+        "List of line profiles.";
+      leaf name {
+        type string {
+          length "1..32";
+        }
+        description
+          "The line bandwidth profile name.";
+      }
+      leaf fixed-bandwidth {
+        type uint64;
+        units "bits/second";
+        default "0";
+        description
+          "Represents the reserved portion of the bandwidth capacity that
+           is allocated to the given traffic flow, regardless of its
+           traffic demand and the overall traffic load conditions.";
+      }
+      leaf assured-bandwidth {
+        type uint64;
+        units "bits/second";
+        default "0";
+        description
+          "Represents a portion of the bandwidth capacity that is allocated
+           to the given traffic flow as long as the flow has
+           unsatisfied traffic demand, regardless of the overall
+           traffic conditions.";
+      }
+      leaf maximum-bandwidth {
+        type uint64;
+        units "bits/second";
+        description
+          "Represents the upper limit on the total bandwidth that can
+           be allocated to the traffic flow under any traffic
+           conditions. The maximum bandwidth must be greater than or equal
+           to the sum of any configured fixed and assured
+           bandwidth";
+      }
+    }
+  }
+  container line-profiles {
+    description
+      "All config data for line profile.";
+    list line-profile {
+      key "name";
+      description
+        "List of line profiles.";
+      leaf name {
+        type string {
+          length "1..32";
+        }
+        description
+          "The line profile name.";
+      }
+      container virtual-ports {
+        description
+          "All config data for virtual ports of the network termination.";
+        list virtual-port {
+          key "name";
+          description
+            "List of virtual ports.";
+          leaf name {
+            type string;
+            description
+              "Name of virtual port.";
+          }
+          leaf line-bandwidth-ref {
+            type line-bandwidth-ref;
+            description
+              "A reference to a network termination line bandwidth profile.";
+          }
+          list match-criteria {
+            key "name";
+            description
+              "List of match criteria.";
+            leaf name {
+              type string;
+              description
+                "Name of match criteria.";
+            }
+            leaf uni-port {
+              type uint8;
+              description
+                "Indicates the user-side port of the network termination.";
+            }
+            leaf vlan {
+              type uint32 {
+                range "0.. 4095 | 65533";
+              }
+              description
+                "Indicates the VLAN ID of the service. The value 65533 indicates an untagged traffic stream.";
+            }
+            leaf priority {
+              type uint8 {
+                range "0..7";
+              }
+              description
+                "Indicates the priority of the service.";
+            }
+          }
+        }
+      }
+    }
+  }
+}

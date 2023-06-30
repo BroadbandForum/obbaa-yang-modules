@@ -1,0 +1,19 @@
+<bbf-vomci-func:vomci xmlns:bbf-vomci-func="urn:bbf:yang:bbf-vomci-function">
+  <bbf-vomci-func:managed-onus>
+    <bbf-vomci-func:managed-onu>
+      <bbf-vomci-func:name>ont1</bbf-vomci-func:name>
+      <bbf-vomci-func:set-onu-communication>
+        <bbf-vomci-func:onu-communication-available>true</bbf-vomci-func:onu-communication-available>
+        <bbf-vomci-func:olt-remote-endpoint>olt-endpoint</bbf-vomci-func:olt-remote-endpoint>
+        <bbf-vomci-func:voltmf-remote-endpoint>voltmf-endpoint</bbf-vomci-func:voltmf-remote-endpoint>
+        <bbf-vomci-func:xpon-onu-type  xmlns:bbf-vomcit="urn:bbf:yang:bbf-vomci-types">bbf-vomcit:gpon</bbf-vomci-func:xpon-onu-type>
+        <bbf-vomci-func:onu-attachment-point>
+          <bbf-vomci-func:olt-name>olt1</bbf-vomci-func:olt-name>
+          <bbf-vomci-func:channel-termination-name>CT1</bbf-vomci-func:channel-termination-name>
+          <bbf-vomci-func:onu-id>1</bbf-vomci-func:onu-id>
+        </bbf-vomci-func:onu-attachment-point>
+      </bbf-vomci-func:set-onu-communication>
+    </bbf-vomci-func:managed-onu>
+  </bbf-vomci-func:managed-onus>
+</bbf-vomci-func:vomci>
+

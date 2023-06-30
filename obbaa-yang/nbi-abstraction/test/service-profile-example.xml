@@ -1,0 +1,34 @@
+<vlan-translation-profiles xmlns="urn:bbf:yang:obbaa:l2-access-common">
+    <vlan-translation-profile>
+        <name>vlan-trans-profile-1</name>
+        <match-criteria>
+            <outer-tag>
+                <vlan-id>100</vlan-id>
+                <pbit>1</pbit>
+            </outer-tag>
+        </match-criteria>
+        <ingress-rewrite>
+            <pop-tags>0</pop-tags>
+            <push-outer-tag>
+                <vlan-id>200</vlan-id>
+                <pbit>0</pbit>
+            </push-outer-tag>
+        </ingress-rewrite>
+    </vlan-translation-profile>
+</vlan-translation-profiles>
+
+<service-profiles xmlns="urn:bbf:yang:obbaa:nt-service-profile">
+<service-profile>
+    <name>service-profile-1</name>
+    <ports>
+        <port>
+            <name>eth.1</name>
+            <port-vlans>
+                <port-vlan>
+                    <name>vlan-trans-profile-1</name>
+                </port-vlan>
+            </port-vlans>
+        </port>
+    </ports>
+</service-profile>
+</service-profiles>

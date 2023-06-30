@@ -1,0 +1,10 @@
+<bbf-vomci-func:vomci xmlns:bbf-vomci-func="urn:bbf:yang:bbf-vomci-function">
+   <bbf-vomci-func:managed-onus>
+     <bbf-vomci-func:managed-onu>
+       <bbf-vomci-func:name>ont1</bbf-vomci-func:name>
+       <bbf-vomci-func:delete-onu>
+         <bbf-vomci-func:delete-state-data>true</bbf-vomci-func:delete-state-data>
+       </bbf-vomci-func:delete-onu>
+     </bbf-vomci-func:managed-onu>
+   </bbf-vomci-func:managed-onus>
+</bbf-vomci-func:vomci>

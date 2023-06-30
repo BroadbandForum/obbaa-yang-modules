@@ -1,0 +1,35 @@
+module: bbf-obbaa-l2-access-common
+  +--rw vlan-translation-profiles
+  |  +--rw vlan-translation-profile* [name]
+  |     +--rw name               string
+  |     +--rw match-criteria
+  |     |  +--rw (vlan-tag-match-type)
+  |     |     +--:(untagged)
+  |     |     |  +--rw untagged?     empty
+  |     |     +--:(vlan-tagged)
+  |     |        +--rw outer-tag
+  |     |        |  +--rw tag-type?   union
+  |     |        |  +--rw vlan-id?    union
+  |     |        |  +--rw pbit?       union
+  |     |        +--rw second-tag
+  |     |           +--rw tag-type?   union
+  |     |           +--rw vlan-id?    union
+  |     |           +--rw pbit?       union
+  |     +--rw ingress-rewrite
+  |        +--rw pop-tags?          uint8
+  |        +--rw push-outer-tag
+  |        |  +--rw tag-type?   union
+  |        |  +--rw vlan-id?    union
+  |        |  +--rw pbit?       union
+  |        +--rw push-second-tag
+  |           +--rw tag-type?   union
+  |           +--rw vlan-id?    union
+  |           +--rw pbit?       union
+  +--rw vlan-forwarding-profiles
+     +--rw vlan-forwarding-profile* [name]
+        +--rw name                string
+        +--rw forwarding-ports
+           +--rw port* [name]
+              +--rw name       string
+              +--rw node-id?   -> /nw:networks/network/node/node-id
+              +--rw tp-id?     -> /nw:networks/network/node/nt:termination-point/tp-id

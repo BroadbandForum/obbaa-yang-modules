@@ -1,0 +1,12 @@
+<vlan-forwarding-profiles xmlns="urn:bbf:yang:obbaa:l2-access-common">
+    <vlan-forwarding-profile>
+        <name>vlan-fwd-profile1</name>
+        <forwarding-ports>
+            <port>
+                <name>fport1</name>
+                <node-id>olt-1</node-id>
+                <tp-id>nni1</tp-id>
+            </port>
+        </forwarding-ports>
+    </vlan-forwarding-profile>
+</vlan-forwarding-profiles>

@@ -22,6 +22,11 @@ include ../defs.mk
 SUBDIRS := $(wildcard *-standard-*)
 
 all: $(SUBDIRS) zip
+
+tests:
+  #TODO make this automatic. Requires updating all existing makefiles on subdirs.
+  #at the time of this commit, there were additional NF adapters not in branch develop...
+	$(MAKE) -C bbf-nf-d-olt-pppoe-ia-standard-1.0/test $(MAKECMDGOALS)
 	
 clean:  $(SUBDIRS)
 	@$(RM) -rf bin
@@ -35,4 +40,4 @@ zip:
 	$(foreach dir,$(SUBDIRS),cd $(dir) && zip -q -r ../bin/$(dir).zip model yang/*.yang; cd ..;)
 
 	
-.PHONY: all $(SUBDIRS) install
+.PHONY: all $(SUBDIRS) install tests

@@ -1,0 +1,224 @@
+module bbf-obbaa-vomci-telemetry {
+  yang-version 1.1;
+  namespace "urn:bbf:yang:bbf-obbaa-vomci-telemetry";
+  prefix bbf-obbaa-vomci-telm;
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+  import bbf-vomci-types {
+    prefix bbf-vomcit;
+  }
+
+  import bbf-vomci-function {
+    prefix bbf-vomci-func;
+  }
+
+  organization
+    "Broadband Forum <https://www.broadband-forum.org>";
+
+  contact
+    "Comments or questions about this Broadband Forum YANG module
+     should be directed to <mailto:obbaa-leaders@broadband-forum.org>.
+    ";
+
+  description
+    "This module contains a collection of YANG definitions needed to
+     handle subscriptions made for collecting telemetry data
+     in the context of OB-BAA.
+      
+     Copyright 2023 Broadband Forum
+      
+     Licensed under the Apache License, Version 2.0 (the \"License\");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+      
+     http://www.apache.org/licenses/LICENSE-2.0
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an \"AS IS\" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License. 
+    ";
+
+  revision 2023-06-02 {
+    description
+      "Initial revision.";
+    reference
+      "https://obbaa.broadband-forum.org/";
+  }
+
+  grouping subscription {
+    list updates {
+      key "name";
+      description
+        "The list of the updates in the subscription.";
+      leaf name {
+        type string;
+        description
+          "The unique name of the update.";
+      }
+      leaf-list xpaths {
+        type yang:xpath1.0;
+        description
+          "The xpath or list of xpaths of the onu data tree that
+           this subscription request applies to.
+           The subscription request will result in the telemetry-data
+           notification being sent periodically, on-change or once
+           based on the parameters in the subscribe action";
+      }
+      leaf mode {
+        description
+          "This indicates the frequency and criteria for sending
+           the telemetry-data notification.";
+        type enumeration {
+          enum "periodic" {
+            description
+              "This mode indicates that the telemetry-data
+               notification needs to be sent every interval as
+               indicated in the leaf interval.";
+          }
+          enum "on-change" {
+            description
+              "This mode indicates that the telemetry-data
+               notification will be sent whenever the value of one of
+               the paths in the list of xpaths changes.";
+          }
+          enum "once" {
+            description
+              "This mode indicates that the telemetry-data
+               notification needs to be sent only once on receipt of
+               the subscription request.";
+          }
+        }
+      }
+      choice intervals {
+        description
+          "Subscription mode parameters.";          
+        case periodic-subscription {
+          leaf interval {
+            when "../mode = 'periodic'";
+            type uint64 {
+              range "10..max";
+            }           
+            units "seconds";
+            default 60;
+            description
+              "The frequency in which the telemetry-data notification
+               will be sent when the mode is periodic.";
+          }
+        }         
+        case on-change-subscription {
+          leaf heartbeat-interval {
+            when "../mode = 'on-change'";
+            type union {
+              type uint64 {
+                range "10..max";
+              }
+              type enumeration {
+                enum none {
+                  description
+                    "Indicates that no heartbeat is required";
+                }
+              }
+            }
+            units "seconds";
+            default none;
+            description
+              "The telemetry-data notification will be sent at the expiry
+               of heartbeat-interval when the mode is on-change even if
+               there have been no change in the value of the subscribed
+               xpaths during that period.";
+          }
+        }         
+      }
+    }
+  }
+
+  grouping subscription-identity {
+    leaf subscription-id {
+      type uint64;
+      description
+        "The subscription-id that uniquely identifies the
+         subscription.";
+    }
+  }
+
+  augment '/bbf-vomci-func:vomci'
+        + '/bbf-vomci-func:managed-onus'
+        + '/bbf-vomci-func:managed-onu' {
+    
+    description
+      "Provides the ability to create, modify, retrieve,
+       and remove subscriptions.";
+
+    action establish-subscription {
+      description
+        "Provides the ability to subscribe to a set of paths within
+         the onu data tree.";
+      input {
+        uses subscription;
+      }
+      output {
+        uses subscription-identity;
+      }
+    }
+    action modify-subscription {
+      description
+        "Provides the ability to modify existing subscriptions.";
+      input {
+        uses subscription-identity;
+        uses subscription;
+      }
+      output {
+        uses subscription-identity;
+      }
+    }
+    action remove-subscription {
+      description
+        "Provides the ability to remove existing subscriptions.";
+      input {
+        uses subscription-identity;
+      }
+      output {
+        uses subscription-identity;
+      }      
+    }
+    container established-subscriptions {
+      description
+        "Provides the ability to retrieve existing subscriptions.";
+      uses subscription-identity;
+      uses subscription;
+    }
+  }
+
+  notification telemetry-data {
+    description
+      "This notification is sent as a result of a subscription
+       requested for receiving telemetry data.";
+    uses subscription-identity;
+    leaf onu-name {
+      type bbf-vomcit:onu-name;
+      description
+        "The name of the ONU that the values are being streamed from.";
+    }
+    leaf collection-time {
+      type yang:date-and-time;
+      description
+        "The timestamp when this data was collected from the onu.";
+    }
+    leaf last-message {
+      type boolean;
+      description
+        "Indicates whether this notification is the last one for this
+         subscription id for that interval.";
+    }
+    anyxml values {
+      description
+        "The values for the xpaths specified in the subscription
+         request. The format will be the same as the format would
+         be if a get is performed on the xpath.";
+    }
+  }
+}

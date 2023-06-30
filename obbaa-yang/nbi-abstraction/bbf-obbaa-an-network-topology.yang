@@ -1,0 +1,123 @@
+module bbf-obbaa-an-network-topology {
+  yang-version 1.1;
+  namespace "urn:bbf:yang:obbaa:an-network-topology";
+  prefix bbf-an-nw-topology;
+
+  import ietf-network {
+    prefix nw;
+    reference
+      "RFC 8345: A YANG Data Model for Network Topologies";
+  }
+  import ietf-network-topology {
+    prefix nt;
+    reference
+      "RFC 8345: A YANG Data Model for Network Topologies";
+  }
+  import bbf-obbaa-nt-line-profile {
+    prefix bbf-nt-line-prof;
+  }
+  import bbf-obbaa-nt-service-profile {
+    prefix bbf-nt-srv-prof;
+  }
+  import bbf-obbaa-tp-types {
+    prefix bbf-tpt;
+  }
+
+  organization
+    "Broadband Forum <https://www.broadband-forum.org>";
+
+  contact
+    "Comments or questions about this Broadband Forum YANG module
+     should be directed to <mailto:obbaa-leaders@broadband-forum.org>.
+    ";
+
+  description
+    "This module contains a set of network topology YANG definitions that
+     are used with line profile and service profile to simplify configuraion.
+
+     Copyright 2022 Broadband Forum
+
+     Licensed under the Apache License, Version 2.0 (the \"License\");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an \"AS IS\" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+     ";
+
+  revision 2021-09-14 {
+    description
+      "Initial revision.";
+  }
+
+  augment "/nw:networks/nw:network/nw:node" {
+    description
+      "Augment the network node with network metadata.";
+    container access-node-attributes {
+      leaf nt-identifier {
+        type string;
+        description
+          "Uniquely identifies a network termination.";
+      }
+      leaf nt-line-profile {
+        type bbf-nt-line-prof:line-profile-ref;
+        description
+          "A reference to a network termination line profile.";
+      }
+      leaf nt-service-profile {
+        type bbf-nt-srv-prof:service-profile-ref;
+        description
+          "A reference to a network termination service profile.";
+      }
+    }
+  }
+
+  augment "/nw:networks/nw:network/nw:node/nt:termination-point" {
+    description
+      "Augments topology termination point information.";
+    leaf tp-type {
+      type identityref {
+        base bbf-tpt:tp-type;
+      }
+      description
+        "The type of termination point.";
+    }
+    container access-termination-point-attributes {
+      leaf port-ref {
+        config false;
+        type string;
+        must
+          '/bbf-nt-line-prof:line-profiles/bbf-nt-line-prof:line-profile
+/bbf-nt-line-prof:virtual-ports/bbf-nt-line-prof:virtual-port[bbf-nt-line-prof:name=current()]
+or /bbf-nt-srv-prof:service-profiles/bbf-nt-srv-prof:service-profile
+/bbf-nt-srv-prof:ports/bbf-nt-srv-prof:port[bbf-nt-srv-prof:name=current()]';
+        description
+          "A reference to a port name of network termination.";
+      }
+    }
+  }
+
+  augment "/nw:networks/nw:network/nt:link" {
+    container access-link-attributes {
+      leaf link-direction {
+        description
+          "link direction.";
+        type enumeration {
+          enum bidirectional {
+            description
+              "bidirectional link";
+          }
+          enum unidirectional {
+            description
+              "unidirectional link";
+          }
+        }
+        default "unidirectional";
+      }
+    }
+  }
+}

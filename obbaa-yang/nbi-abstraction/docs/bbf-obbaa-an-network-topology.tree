@@ -1,0 +1,14 @@
+module: bbf-obbaa-an-network-topology
+
+  augment /nw:networks/nw:network/nw:node:
+    +--rw access-node-attributes
+       +--rw nt-identifier?        string
+       +--rw nt-line-profile?      bbf-nt-line-prof:line-profile-ref
+       +--rw nt-service-profile?   bbf-nt-srv-prof:service-profile-ref
+  augment /nw:networks/nw:network/nw:node/nt:termination-point:
+    +--rw tp-type?                               identityref
+    +--rw access-termination-point-attributes
+       +--ro port-ref?   string
+  augment /nw:networks/nw:network/nt:link:
+    +--rw access-link-attributes
+       +--rw link-direction?   enumeration

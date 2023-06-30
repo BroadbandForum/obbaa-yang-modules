@@ -79,6 +79,18 @@ module bbf-voltmf-entity {
      This version of this YANG module is part of TR-451; see
      the TR itself for full legal notices.";
 
+   revision 2023-05-19 {
+     description
+       "Update of the messages between the vOLTMF and the vOMCI function to
+       match the published version of TR-451. For use only within the OB-BAA
+       project while the standard device aggregation and vOLTMF YANG data 
+       models are not used. 
+       NOTe: This module was never released as part of TR-451.";
+     reference 
+       "https://obbaa.broadband-forum.org/";
+   }
+   
+  
   revision 2021-08-19 {
     description
       "Initial revision.";
@@ -100,7 +112,24 @@ module bbf-voltmf-entity {
     }
     
     leaf onu-management-chain-selection {
-      type bbf-vomcit:onu-management-chain-selection;
+      type enumeration {
+         enum vomci-policy {
+           description
+             "Identifies that the ONU management chain is computed 
+              using a policy to select the vOMCI function instance.";
+         }
+         enum configured {
+           description
+             "Identifies that the ONU management chain is configured by 
+              an external entity.";
+         }
+         enum vomci-function {
+           description
+             "Identifies that the ONU management chain is computed 
+              using the type of vOMCI function to select the vOMCI 
+              function instance.";
+         }
+      }
       description
         "The option used to determine the ONU management chain.";
     }

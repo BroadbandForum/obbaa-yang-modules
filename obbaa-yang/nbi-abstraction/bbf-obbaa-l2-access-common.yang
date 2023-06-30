@@ -1,0 +1,310 @@
+module bbf-obbaa-l2-access-common {
+  yang-version 1.1;
+  namespace "urn:bbf:yang:obbaa:l2-access-common";
+  prefix bbf-l2acc-c;
+
+  import bbf-dot1q-types {
+    prefix bbf-dot1qt;
+  }
+  import ietf-network {
+    prefix nw;
+  }
+  import ietf-network-topology {
+    prefix nt;
+  }
+
+  organization
+    "Broadband Forum <https://www.broadband-forum.org>";
+
+  contact
+    "Comments or questions about this Broadband Forum YANG module
+     should be directed to <mailto:obbaa-leaders@broadband-forum.org>.
+    ";
+
+  description
+    "This module contains a collection of YANG definitions for
+     simplifying the Access Device Model as exposed over NBI of BAA.
+
+     Copyright 2022 Broadband Forum
+
+     Licensed under the Apache License, Version 2.0 (the \"License\");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an \"AS IS\" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+     ";
+
+  revision 2021-09-30 {
+    description
+      "Initial revision.";
+    reference
+      "RFC 8944: A YANG Data Model for Layer 2 Network Topologies";
+  }
+
+  grouping access-tag {
+    leaf tag-type {
+      type union {
+        type bbf-dot1qt:dot1q-tag-type;
+        type uint16;
+        type enumeration {
+          enum any {
+            description
+              "Matches any tag type.";
+          }
+        }
+      }
+      default "any";
+      description
+        "VLAN tag type.";
+    }
+    leaf vlan-id {
+      type union {
+        type bbf-dot1qt:vlan-id-range;
+        type enumeration {
+          enum any {
+            description
+              "Matches any VLAN-ID in the range 1 to 4094, or
+               matches priority tagged frames.";
+          }
+          enum priority-tagged {
+            description
+              "Priority-tagged frames are frames with a VLAN tag
+               present and that match VLAN-ID 0.";
+          }
+          enum vlan-id-is-a-parameter {
+            description
+              "The VLAN ID is not
+               specified inside this profile but has to be
+               specified at the place where this profile
+               is referenced.";
+          }
+        }
+      }
+      description
+        "Allowed VLAN-IDs.";
+    }
+    leaf pbit {
+      type union {
+        type bbf-dot1qt:pbit-list;
+        type enumeration {
+          enum any {
+            description
+              "Matches any pbit value in the range of 0 to 7.";
+          }
+        }
+      }
+      description
+        "Allowed PBIT values.";
+    }
+  }
+
+  grouping access-vlan-tag-match {
+    description
+      "Flexible match on the VLAN tags of Ethernet frames.";
+    choice vlan-tag-match-type {
+      mandatory true;
+      description
+        "Provides a choice of how the frames are to be matched.";
+      case untagged {
+        leaf untagged {
+          type empty;
+          description
+            "Untagged match. Matches all untagged traffic.";
+        }
+      }
+      case vlan-tagged {
+        container outer-tag {
+          description
+            "Classifies traffic using the outermost VLAN tag on the
+             frame.";
+          uses access-tag;
+        }
+        container second-tag {
+          description
+            "Classifies traffic using the second outermost VLAN tag
+             on the frame.";
+          uses access-tag;
+        }
+      }
+    }
+  }
+
+  grouping access-vlan-tag-rewrite {
+    description
+      "Flexible match on the VLAN tags of Ethernet frames.";
+    leaf pop-tags {
+      type uint8 {
+        range "0..2";
+      }
+      default 0;
+      description
+        "The number of tags to pop.";
+    }
+    container push-outer-tag {
+      description
+        "The outermost VLAN tag to push onto the frame.";
+      uses access-tag;
+    }
+    container push-second-tag {
+      description
+        "The second outermost VLAN tag to push onto the frame.";
+      uses access-tag;
+    }
+  }
+
+  grouping vlan-match-and-rewrite {
+    description
+      "Configuration of frame VLAN tag processing, include frame classification and VLAN tag rewrite";
+    container match-criteria {
+      description
+        "This container collects match criteria for various frame fields.";
+      uses access-vlan-tag-match;
+    }
+    container ingress-rewrite {
+      description
+        "Ingress rewrite refers to the supported tag manipulations
+         before the frame is offered to a higher layer interface or
+         to a forwarder or to a destination termination-point.";
+      uses access-vlan-tag-rewrite;
+    }
+  }
+
+  grouping l2-access-attributes {
+    description
+      "Flexible match on the VLAN tags of Ethernet frames.";
+    container vlan-translation {
+      leaf translation-profile {
+        type leafref {
+          path
+            "/bbf-l2acc-c:vlan-translation-profiles/bbf-l2acc-c:"
+          + "vlan-translation-profile/bbf-l2acc-c:name";
+        }
+        description
+          "A reference to a vlan translation profile that contains
+           frame VLAN classification and VLAN tag rewrite.";
+      }
+      leaf outer-vlan-id {
+        when
+          '/bbf-l2acc-c:vlan-translation-profiles/'
+        + 'bbf-l2acc-c:vlan-translation-profile[bbf-l2acc-c:'
+        + 'name = current()/../translation-profile]/'
+        + 'match-criteria/outer-tag/vlan-id = '
+        + '"vlan-id-is-a-parameter" ' {
+          description
+            "Match criteria for the outer VLAN tag of a frame that
+             overrules the match criteria provided through the
+             referenced VLAN translation profile.";
+        }
+        type bbf-dot1qt:vlan-id;
+      }
+      leaf second-vlan-id {
+        when
+          '/bbf-l2acc-c:vlan-translation-profiles/'
+        + 'bbf-l2acc-c:vlan-translation-profile[bbf-l2acc-c:'
+        + 'name = current()/../translation-profile]/'
+        + 'match-criteria/second-tag/vlan-id = '
+        + '"vlan-id-is-a-parameter" ' {
+          description
+            "Match criteria for the second VLAN tag of a frame that
+             overrules the match criteria provided through the
+             referenced VLAN translation profile.";
+        }
+        type bbf-dot1qt:vlan-id;
+      }
+      leaf push-outer-vlan-id {
+        when
+          '/bbf-l2acc-c:vlan-translation-profiles/'
+        + 'bbf-l2acc-c:vlan-translation-profile[bbf-l2acc-c:'
+        + 'name = current()/../translation-profile]/'
+        + 'ingress-rewrite/push-outer-tag/vlan-id = '
+        + '"vlan-id-is-a-parameter" ' {
+          description
+            "Indicates the VLAN ID of the pushed outer VLAN tag,
+             which overwrites the outer VLAN tag rewritten
+             by the referenced VLAN translation profile.";
+        }
+        type bbf-dot1qt:vlan-id;
+      }
+      leaf push-second-vlan-id {
+        when
+          '/bbf-l2acc-c:vlan-translation-profiles/'
+        + 'bbf-l2acc-c:vlan-translation-profile[bbf-l2acc-c:'
+        + 'name = current()/../translation-profile]/'
+        + 'ingress-rewrite/push-second-tag/vlan-id = '
+        + '"vlan-id-is-a-parameter" ' {
+          description
+            "Indicates the VLAN ID of the pushed second VLAN tag,
+             which overwrites the second VLAN tag rewritten
+             by the referenced VLAN translation profile.";
+        }
+        type bbf-dot1qt:vlan-id;
+      }
+    }
+  }
+
+  container vlan-translation-profiles {
+    description
+      "Configuration of VLAN translation profiles.";
+    list vlan-translation-profile {
+      key "name";
+      description
+        "A translation profile defines the VLAN match criteria and
+             vlan tag rewrite.";
+      leaf name {
+        type string;
+        description
+          "VLAN translation profile name.";
+      }
+      uses vlan-match-and-rewrite;
+    }
+  }
+  container vlan-forwarding-profiles {
+    description
+      "Configuration of VLAN forwarding profiles.";
+    list vlan-forwarding-profile {
+      key "name";
+      description
+        "A forwarding profile defines the network-side
+         forwarding of traffic in a forwarding VLAN.";
+      leaf name {
+        type string;
+        description
+          "VLAN forwarding profile name.";
+      }
+      container forwarding-ports {
+        description
+          "Network-side forwarding ports in the forwarding profile.";
+        list port {
+          key "name";
+          leaf name {
+            type string;
+            description
+              "forwarding port name.";
+          }
+          leaf node-id {
+            type leafref {
+              path "/nw:networks/nw:network/nw:node/nw:node-id";
+              require-instance false;
+            }
+            description
+              "The ID of a network side node.";
+          }
+          leaf tp-id {
+            type leafref {
+              path "/nw:networks/nw:network/"
+                 + "nw:node/nt:termination-point/nt:tp-id";
+              require-instance false;
+            }
+            description
+              "This ID of a network-side termination point.";
+          }
+        }
+      }
+    }
+  }
+}

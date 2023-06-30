@@ -1,0 +1,5 @@
+<bbf-vomci-func:onu-alignment-result xmlns:bbf-vomci-func="urn:bbf:yang:bbf-vomci-function">
+  <bbf-vomci-func:onu-name>ont1</bbf-vomci-func:onu-name>
+  <bbf-vomci-func:datastore-tag>1</bbf-vomci-func:datastore-tag>
+  <bbf-vomci-func:alignment-state>unaligned</bbf-vomci-func:alignment-state>
+</bbf-vomci-func:onu-alignment-result>

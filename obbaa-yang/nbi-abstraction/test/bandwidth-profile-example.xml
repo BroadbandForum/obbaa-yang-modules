@@ -1,0 +1,8 @@
+<line-bandwidth-profiles xmlns="urn:bbf:yang:obbaa:nt-line-profile">
+    <line-bandwidth-profile>
+        <name>bandwidth-profile-1</name>
+        <fixed-bandwidth>102400</fixed-bandwidth>
+        <assured-bandwidth>102400</assured-bandwidth>
+        <maximum-bandwidth>204800</maximum-bandwidth>
+    </line-bandwidth-profile>
+</line-bandwidth-profiles>

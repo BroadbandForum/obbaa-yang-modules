@@ -1,0 +1,10 @@
+module: bbf-obbaa-nt-service-profile
+  +--rw service-profiles
+     +--rw service-profile* [name]
+        +--rw name     string
+        +--rw ports
+           +--rw port* [name]
+              +--rw name          string
+              +--rw port-vlans
+                 +--rw port-vlan* [name]
+                    +--rw name    -> /bbf-l2acc-c:vlan-translation-profiles/vlan-translation-profile/name

@@ -1,6 +1,6 @@
 <!-- The ONU was successfuly authenticated but the management mode does not match  -->
 <onu-authentication-report-notification xmlns="urn:bbf:yang:obbaa:onu-management">
-   <onu-authentication-status xmlns:baa-onu-types="urn:bbf:yang:obbaa:xpon-onu-types">baa-onu-types:vomci-expected-by-olt-but-inconsistent-pmaa-mgmt-mode</onu-authentication-status>
+   <onu-authentication-status xmlns:baa-pmaa-onu-types="urn:bbf:yang:obbaa:pmaa-onu-types">baa-pmaa-onu-types:vomci-per-olt-eomci-per-pmaa</onu-authentication-status>
    <olt-name>OLT1</olt-name>
    <channel-termination-name>ct1</channel-termination-name>
    <onu-id>1</onu-id>

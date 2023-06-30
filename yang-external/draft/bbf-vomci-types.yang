@@ -68,6 +68,16 @@ module bbf-vomci-types {
      This version of this YANG module is part of TR-451; see
      the TR itself for full legal notices.";
 
+  revision 2023-05-19 {
+     description
+        "Update of the messages between the vOLTMF and the vOMCI function to
+        match the published version of TR-451. For use only within the OB-BAA
+        project while the standard device aggregation and vOLTMF YANG data 
+        models are not used.";
+     reference 
+        "https://obbaa.broadband-forum.org/";
+  }
+  
   revision 2021-08-19 {
     description
       "Initial revision.";
@@ -171,6 +181,45 @@ module bbf-vomci-types {
       "The vendor and software version for a vendor formatted
        as 'vendor_id-software_version'.";
   }
+ 
+  //added from the published version of TR-451
+  identity xpon-onu-type {
+    description
+      "The vOMCI ONU xPON types.";
+  }
+  
+  identity ngpon2 {
+    base xpon-onu-type;
+    description
+      "This denotes a NG-PON2 ONU, per ITU-T G.989.3.";
+    reference
+      "ITU-T G.989.3";
+  }
+  
+  identity xgs {
+    base xpon-onu-type;
+    description
+      "This denotes an XGS ONU, per ITU-T G.9807.1.";
+    reference
+      "ITU-T G.9807.1";
+  }
+  
+  identity xgpon {
+    base xpon-onu-type;
+    description
+      "This denotes a XG-PON ONU, per ITU-T G.987.3.";
+    reference
+      "ITU-T G.987.3";
+  }
+  
+  identity gpon {
+    base xpon-onu-type;
+    description
+      "This denotes a GPON ONU, per ITU-T G.984.3.";
+    reference
+      "ITU-T G.984.3";
+  }
+  //end of added from the published version of TR-451
 
   typedef onu-management-chain-selection {
     type enumeration {

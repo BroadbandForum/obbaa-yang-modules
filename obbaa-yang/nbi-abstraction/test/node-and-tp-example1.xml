@@ -1,0 +1,37 @@
+<networks xmlns="urn:ietf:params:xml:ns:yang:ietf-network" xmlns:nt="urn:ietf:params:xml:ns:yang:ietf-network-topology"
+          xmlns:bbf-an-nw-topology="urn:bbf:yang:obbaa:an-network-topology" xmlns:l2t="urn:ietf:params:xml:ns:yang:ietf-l2-topology">
+    <network>
+        <network-id>network-fan1</network-id>
+        <network-types>
+            <l2t:l2-topology/>
+        </network-types>
+        <supporting-network>
+            <network-ref>network-fan1</network-ref>
+        </supporting-network>
+        <node>
+            <node-id>olt-1</node-id>
+            <supporting-node>
+                <network-ref>network-fan1</network-ref>
+                <node-ref>p-olt-1</node-ref>
+            </supporting-node>
+            <nt:termination-point>
+                <nt:tp-id>uni1</nt:tp-id>
+                <nt:supporting-termination-point>
+                    <nt:network-ref>network-fan1</nt:network-ref>
+                    <nt:node-ref>olt-1</nt:node-ref>
+                    <nt:tp-ref>pon-tp1</nt:tp-ref>
+                </nt:supporting-termination-point>
+                <bbf-an-nw-topology:tp-type xmlns:bbf-tpt="urn:bbf:yang:obbaa:tp-types">bbf-tpt:uni</bbf-an-nw-topology:tp-type>
+            </nt:termination-point>
+            <nt:termination-point>
+                <nt:tp-id>nni1</nt:tp-id>
+                <nt:supporting-termination-point>
+                    <nt:network-ref>network-fan1</nt:network-ref>
+                    <nt:node-ref>olt-1</nt:node-ref>
+                    <nt:tp-ref>eth-tp1</nt:tp-ref>
+                </nt:supporting-termination-point>
+                <bbf-an-nw-topology:tp-type xmlns:bbf-tpt="urn:bbf:yang:obbaa:tp-types">bbf-tpt:nni</bbf-an-nw-topology:tp-type>
+            </nt:termination-point>
+        </node>
+    </network>
+</networks>

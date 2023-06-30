@@ -1,0 +1,168 @@
+{
+  "bbf-d-olt-pppoe-intermediate-agent:d-olt-pppoe-intermediate-agent": {
+    "pppoe-profiles": {
+      "pppoe-profile": [
+        {
+          "name": "profile1",
+          "pppoe-vendor-specific-tag": {
+            "subtag": [
+              "circuit-id",
+              "remote-id"
+            ],
+            "default-circuit-id-syntax": "Access-Node-Identifier eth Slot/Port/ONUID",
+            "default-remote-id-syntax": "S-VID:C-VID"
+          }
+        },
+        {
+          "name": "profile2",
+          "pppoe-vendor-specific-tag": {
+            "subtag": [
+              "circuit-id",
+              "remote-id"
+            ],
+            "default-circuit-id-syntax": "Access-Node-Identifier eth Slot/Port/ONUID",
+            "default-remote-id-syntax": "S-VID"
+          }
+        }
+      ]
+    },
+    "devices-using-d-olt-pppoeia": {
+      "device": [
+        {
+          "name": "olt1",
+          "access-node-id": "an-id-olt1",
+          "subscriber-profiles": {
+            "subscriber-profile": [
+              {
+                "name": "subscriber-1",
+                "circuit-id": "olt1 eth 1/1",
+                "remote-id": "olt1-subscriber-1"
+              },
+              {
+                "name": "subscriber-2",
+                "circuit-id": "olt1 eth 1/1",
+                "remote-id": "olt1-subscriber-2"
+              }
+            ]
+          },
+          "vsi-list": {
+            "vsi": [
+              {
+                "vsi-name": "vsi-subscriber-1",
+                "subscriber-profile": "subscriber-1",
+                "pppoe-profile": "profile1"
+              },
+              {
+                "vsi-name": "vsi-subscriber-2",
+                "subscriber-profile": "subscriber-2",
+                "pppoe-profile": "profile1"
+              },
+              {
+                "vsi-name": "vsi-subscriber-3",
+                "pppoe-profile": "profile1"
+              },
+              {
+                "vsi-name": "vsi-subscriber-4",
+                "pppoe-profile": "profile2"
+              }
+            ]
+          }
+        },
+        {
+          "name": "olt2",
+          "access-node-id": "an-id-olt2",
+          "subscriber-profiles": {
+            "subscriber-profile": [
+              {
+                "name": "subscriber-1",
+                "circuit-id": "olt2 eth 1/1",
+                "remote-id": "olt2-subscriber-1"
+              },
+              {
+                "name": "subscriber-2",
+                "circuit-id": "olt2 eth 1/1",
+                "remote-id": "olt2-subscriber-2"
+              },
+              {
+                "name": "subscriber-3",
+                "circuit-id": "olt2 eth 1/1",
+                "remote-id": "olt2-subscriber-3"
+              }
+            ]
+          },
+          "vsi-list": {
+            "vsi": [
+              {
+                "vsi-name": "vsi-subscriber-1",
+                "subscriber-profile": "subscriber-1",
+                "pppoe-profile": "profile1"
+              },
+              {
+                "vsi-name": "vsi-subscriber-2",
+                "subscriber-profile": "subscriber-2",
+                "pppoe-profile": "profile1"
+              },
+              {
+                "vsi-name": "vsi-subscriber-3",
+                "subscriber-profile": "subscriber-3",
+                "pppoe-profile": "profile1"
+              },
+              {
+                "vsi-name": "vsi-subscriber-4",
+                "pppoe-profile": "profile2"
+              }
+            ]
+          }
+        },
+        {
+          "@": {
+            "ietf-netconf:operation": "remove"
+          },
+          "name": "olt3"
+        }
+      ]
+    },
+    "remote-nf": {
+      "nf-client": {
+        "enabled": true,
+        "initiate": {
+          "remote-server": [
+            {
+              "name": "pppoe-grpc-2",
+              "mfc-type": "bbf-d-olt-network-function-types:mfc-cpri",
+              "nf-type": "bbf-network-function-types:vnf-type",
+              "on-demand": false,
+              "grpc-client": {
+                "access-point": [
+                  {
+                    "name": "olt-grpc-1",
+                    "grpc-transport-parameters": {
+                      "tcp-client-parameters": {
+                        "remote-address": "1.1.1.1",
+                        "remote-port": 9999
+                      },
+                      "tls-client-parameters": {
+                        "server-authentication": {
+                          "ca-certs": {
+                            "inline-definition": {
+                              "certificate": [
+                                {
+                                  "name": "cert1",
+                                  "cert-data": "MIIFoTCCA4mgAwIBAgIUC3M1Qr2xdF2/x9G/t1CsC9nt43UwDQYJKoZIhvcNAQELBQAwWjELMAkGA1UEBhMCUFQxETAPBgNVBAgMCFBvcnR1Z2FsMQwwCgYDVQQHDANBdnIxCjAIBgNVBAoMAUExCjAIBgNVBAsMAUExEjAQBgNVBAMMCWxvY2FsaG9zdDAgFw0yMzAzMDcxMTA3NTVaGA8yMTIzMDIxMTExMDc1NVowWjELMAkGA1UEBhMCUFQxETAPBgNVBAgMCFBvcnR1Z2FsMQwwCgYDVQQHDANBdnIxCjAIBgNVBAoMAUExCjAIBgNVBAsMAUExEjAQBgNVBAMMCWxvY2FsaG9zdDCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAMld99qRuY9yfAfvLqQYeVTiAWNy9wH0Urw9sZ6n9YNR4kWN5nUG0eA+1xonPZQykUSe95A/qNKJxoRiJ3OqF6Whq3WqB1oU2hCDg0BXklgKZR6P9muGIX7uRd16gkSbngYagHuqeJMx3gQPv7B9SyhqkKGKmuvwjovCvR7JQA7c7QClHGLCvGMjipE3ZwTgCHVoWoTMjuzhJIpbfA6YmgWV7lP4F6YkFz6jgv2+g6XmZH/YfmrmqG3bqk7hXvvluzpxSZfE/QwwicklmNXyEMfbeiYkU+nxo0JF3VT6VaFqWiSlLMUN9IRTLAlzb9TveskrNjtuOFF+nrfkiM9oxl2mbQicVf6toym999aPatI/y4uaKVo1kajDEdK0HjqM52Lbq9Z26a42D/O7vOj2ecAm8GHddvkdhaBVix2Mqq+pLFpZAgWIAnFgqmMLJ1SG/PFgf2WleJNjAKVePlSug+6oktzYt/5zc4jTIMmz6SBGr7Kur6hK6FSEwa6AwtZdb4tLqadBt+3hNFLHSt0Jl7jKtbzZvtYnOoprU5a6eV6oR/Dr5nY3/YseJppqf5FscNotYhRFwWo2R0lzfFVPpr7OpXm29L1T3vSxoIqPX5FYomAIyeS/Xn50Q5znGv+2lCfA0BBxTdveIVv/XdGC487s0rxVASjD3afjuqH8lZPvAgMBAAGjXTBbMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFFPeOIgbarcK0tDFg9oItpFjTq5yMB8GA1UdIwQYMBaAFFPeOIgbarcK0tDFg9oItpFjTq5yMAsGA1UdDwQEAwIE8DANBgkqhkiG9w0BAQsFAAOCAgEAxLfEJH4Bd40ieQrnEBmebR3O1byMo8ofFnXi5NBy0/Yal+yMwwQ2OMxzS38bhFEqN4E8rlfH5uFr3G5bI7ZRcZxJTQcn2+VoF8zQ/trQItwSmQMI9k+aTSrqOcgz+otc+6ZXZwtPnxldNbS+TBCg+g7BQ1r5RCr4/ZdM3IxlJHwXxVSV9p/wLuf+B1l/HFG3C+tJQsNjInGgnf/aoZeA5uw0EVFnQXpADngQ/5/PIbm8a8MtD6W5sfZf8pCy7kqlhMvwHtEDpXkcgtQFQNRH37MSh2fHww8v91qV743Tzdg24zA4qQ+6xW/gZJb2B1P5fOx8sOKNbaUACmu77s3SOHNZgfJ4kDdzW0Vrv//qaLJlHudVjLcJc+soe2UydhM12lUK8L97gXuP3539DagNrk2CsNY85usNt8ZB88jGvwFE63JyV0RRdqEZTjY6/mObQ0lEivpVg4G+P5nflvrAEc1d/uZPy68R6AvkVZoUUxOiD+rtRJelsInpCBzzvNgLV8J2IUWnotzVD6aVV+lsGWB1ZRjJ3/AokFiCU9Djp2EaSsvTui7SP8W9iozYhjxSQ2n+0W60xz/lDxwCYlWjadBvgIuqP/yHZlt+omFFUORnKWEnTqfi7rVvFRj84o/xGCh2bGRiCVXySiLihLpdw4k1hSmUsqQwS7mY2F8Jc+I="
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

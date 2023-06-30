@@ -1,0 +1,105 @@
+module bbf-obbaa-l2-topology {
+  yang-version 1.1;
+  namespace "urn:bbf:yang:obbaa:l2-topology";
+  prefix bbf-l2t;
+
+  import ietf-network {
+    prefix nw;
+  }
+  import ietf-network-topology {
+    prefix nt;
+  }
+  import bbf-dot1q-types {
+    prefix bbf-dot1qt;
+  }
+  import ietf-l2-topology {
+    prefix l2t;
+  }
+  import bbf-obbaa-l2-access-common {
+    prefix bbf-l2acc-c;
+  }
+  import bbf-obbaa-tp-types {
+    prefix bbf-tpt;
+  }
+  
+  import bbf-obbaa-an-network-topology {
+    prefix bbf-an-nw-topology;
+  }
+
+  organization
+    "Broadband Forum <https://www.broadband-forum.org>";
+
+  contact
+    "Comments or questions about this Broadband Forum YANG module
+     should be directed to <mailto:obbaa-leaders@broadband-forum.org>.
+    ";
+
+  description
+    "This module contains a collection of L2 topology YANG definitions
+     for simplifying the Access Device Model as exposed over NBI of BAA.
+
+     Copyright 2022 Broadband Forum
+
+     Licensed under the Apache License, Version 2.0 (the \"License\");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an \"AS IS\" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+     ";
+
+  revision 2021-09-14 {
+    description
+      "Initial revision.";
+    reference
+      "RFC 8944: A YANG Data Model for Layer 2 Network Topologies";
+  }
+
+  augment
+    "/nw:networks/nw:network/nw:node/nt:termination-point/l2t:l2-termination-point-attributes" {
+      when '../bbf-an-nw-topology:tp-type = "bbf-tpt:l2-svlan"' {
+        description
+          "Augmentation parameters apply only for l2-vlan termination point.";
+      }
+      description
+        "Augments L2 topology termination point information.";
+      container forwarding-vlan {
+        description
+          "l2 access network vlan termination poin attributes";
+        leaf vlan-id {
+          type bbf-dot1qt:vlan-id;
+          description
+            "The forwarding vlan ID.";
+        }
+        leaf forwarding-profile {
+          type leafref {
+            path
+              "/bbf-l2acc-c:vlan-forwarding-profiles/bbf-l2acc-c:"
+            + "vlan-forwarding-profile/bbf-l2acc-c:name";
+          }
+          description
+            "vlan forwarding profile.";
+        }
+      }
+  }
+
+  augment
+    "/nw:networks/nw:network/nw:node/nt:termination-point/l2t:l2-termination-point-attributes" {
+      when
+        '../bbf-an-nw-topology:tp-type = "bbf-tpt:l2-v-uni" or ../bbf-an-nw-topology:tp-type = "bbf-tpt:l2-v-nni"' {
+          description
+            "Augmentation parameters applies only to l2-v-uni or l2-v-nni TP types.";
+      }
+      description
+        "Augments L2 topology termination point information.";
+      container l2-access-attributes {
+        description
+          "l2 access network termination point attributes";
+        uses bbf-l2acc-c:l2-access-attributes;
+      }
+  }
+}

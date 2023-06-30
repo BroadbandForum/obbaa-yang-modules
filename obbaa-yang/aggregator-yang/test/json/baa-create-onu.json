@@ -1,0 +1,100 @@
+{
+  "bbf-obbaa-network-manager:network-manager": {
+    "managed-devices": {
+      "device": [
+        {
+          "name": "OLT1",
+          "device-management": {
+            "type": "OLT",
+            "interface-version": "2.1",
+            "model": "standard",
+            "vendor": "BBF",
+            "device-connection": {
+              "connection-model": "direct",
+              "password-auth": {
+                "authentication": {
+                  "address": "172.21.217.83",
+                  "management-port": 830,
+                  "user-name": "netconf",
+                  "password": "netconf"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "ont1",
+          "device-management": {
+            "type": "ONU",
+            "interface-version": "1.1",
+            "model": "standard",
+            "vendor": "BBF",
+            "device-connection": {
+              "connection-model": "mediated-session",
+              "mediated-protocol": "vomci"
+            },
+            "bbf-obbaa-onu-management:onu-config-info": {
+              "expected-serial-number": "ABCD12345678",
+              "xpon-technology": "bbf-xpon-types:gpon",
+              "planned-onu-management-mode": "bbf-obbaa-xpon-onu-types:use-vomci",
+              "expected-attachment-points": {
+                "list-type": "allow-any",
+                "expected-attachment-point": [
+                  {
+                    "name": "OLT1.CPart_1",
+                    "olt-name": "OLT1",
+                    "channel-partition-name": "CG_1.CPart_1"
+                  }
+                ]
+              },
+              "vomci-onu-management": {
+                "onu-management-chain-selection": "configured",
+                "vomci-function": "bbf-vomci",
+                "onu-management-chain": [
+                  {
+                    "nf-type": "vomci-function",
+                    "nf-name": "bbf-vomci"
+                  },
+                  {
+                    "nf-type": "onu-management-proxy",
+                    "nf-name": "bbf-vproxy"
+                  },
+                  {
+                    "nf-type": "olt",
+                    "nf-name": "OLT1"
+                  }
+                ],
+                "network-function-links": {
+                  "network-function-link": [
+                    {
+                      "name": "vOMCI-proxy",
+                      "termination-point-a": {
+                        "function-name": "bbf-vomci",
+                        "local-endpoint-name": "vOMCi-grpc-1"
+                      },
+                      "termination-point-b": {
+                        "function-name": "bbf-vproxy",
+                        "local-endpoint-name": "proxy-grpc-1"
+                      }
+                    },
+                    {
+                      "name": "proxy-OLT",
+                      "termination-point-a": {
+                        "function-name": "bbf-vproxy",
+                        "local-endpoint-name": "proxy-grpc-2"
+                      },
+                      "termination-point-b": {
+                        "function-name": "OLT1",
+                        "local-endpoint-name": "olt-grpc-2"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -16,19 +16,19 @@ module: ietf-yang-schema-mount
      |           +--ro parent-reference*   yang:xpath1.0
      +--ro schema* [name]
         +--ro name           string
-        +--ro module* [name revision]
-        |  +--ro name                yang:yang-identifier
-        |  +--ro revision            union
+        x--ro module* [name revision]
+        |  x--ro name                yang:yang-identifier
+        |  x--ro revision            union
         |  +--ro schema?             inet:uri
-        |  +--ro namespace           inet:uri
-        |  +--ro feature*            yang:yang-identifier
-        |  +--ro deviation* [name revision]
-        |  |  +--ro name        yang:yang-identifier
-        |  |  +--ro revision    union
-        |  +--ro conformance-type    enumeration
-        |  +--ro submodule* [name revision]
-        |     +--ro name        yang:yang-identifier
-        |     +--ro revision    union
+        |  x--ro namespace           inet:uri
+        |  x--ro feature*            yang:yang-identifier
+        |  x--ro deviation* [name revision]
+        |  |  x--ro name        yang:yang-identifier
+        |  |  x--ro revision    union
+        |  x--ro conformance-type    enumeration
+        |  x--ro submodule* [name revision]
+        |     x--ro name        yang:yang-identifier
+        |     x--ro revision    union
         |     +--ro schema?     inet:uri
         +--ro mount-point* [module label]
            +--ro module              yang:yang-identifier

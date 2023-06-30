@@ -16,7 +16,7 @@ module: bbf-obbaa-onu-management
        |     +--rw planned-onu-management-mode-in-this-olt?   identityref
        +--rw vomci-onu-management
           +--rw use-vomci-management?             boolean
-          +--rw onu-management-chain-selection?   bbf-vomcit:onu-management-chain-selection
+          +--rw onu-management-chain-selection?   enumeration
           +--rw vomci-function?                   bbf-yang:string-ascii64
           +--rw onu-management-chain* [nf-type nf-name]
           |  +--rw nf-type    bbf-vomcit:vomci-entity-type

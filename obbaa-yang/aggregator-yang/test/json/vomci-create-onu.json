@@ -1,0 +1,10 @@
+{
+  "bbf-vomci-function:vomci": {
+    "managed-onus": {
+      "create-onu": {
+        "name": "onu1",
+        "xpon-onu-type": "bbf-vomci-types:gpon"
+      }
+    }
+  }
+}

@@ -84,6 +84,16 @@ module bbf-vomci-proxy {
      This version of this YANG module is part of TR-451; see
      the TR itself for full legal notices.";
 
+  revision 2023-05-19 {
+    description
+      "Update of the messages between the vOLTMF and the vOMCI function to
+      match the published version of TR-451. For use only within the OB-BAA
+      project while the standard device aggregation and vOLTMF YANG data 
+      models are not used.";
+    reference 
+      "https://obbaa.broadband-forum.org/";
+  }
+  
   revision 2020-08-19 {
     description
       "Initial revision.";
@@ -105,164 +115,207 @@ module bbf-vomci-proxy {
        endpoints are supported.";
   }
   
-  container managed-onus {
-    description
-      "The ONUs that are being managed by this entity.";
-    action create-onu {
+  container vomci {
+     description
+       "Data nodes associated with the vOMCI Proxy.";
+  
+    container managed-onus {
       description
-        "Provides the ability to create an ONU within the 
-         vOMCI Proxy.";
-      input {
+        "The ONUs that are being managed by this entity.";
+      action create-onu {
+        description
+            "Create an ONU within the vOMCI Proxy.";
+        input {
+          leaf name {
+            type bbf-vomcit:onu-name;
+            description
+              "The unique name of the ONU.";
+          }
+            leaf xpon-onu-type {
+              type identityref {
+                base bbf-vomcit:xpon-onu-type;
+              }
+              description
+                "The ONU's xPON type.";
+        }
+      }
+      }
+      list managed-onu {
+        key "name";
+        config false;
+        description
+            "An ONU that is being managed by this entity.";
         leaf name {
           type bbf-vomcit:onu-name;
           description
             "The unique name of the ONU.";
         }
-      }
-    }
-    list managed-onu {
-      key "name";
-      config false;
-      description
-        "The list of ONUs that are being managed by this entity.";
-      leaf name {
-        type bbf-vomcit:onu-name;
-        description
-          "The unique name of the ONU.";
-      }
-      action delete-onu {
-        description
-          "Provides the ability to delete an ONU within the 
-           vOMCI Proxy.";
-      }
-      action set-onu-communication {
-        description
-          "Provides the ability to configure the information necessary
-           to establish if an ONU can be communicated with by the
-           vOMCI Proxy along with remote endpoint to use.";
-        input {
-          leaf onu-communication-available {
-            type boolean;
+        leaf xpon-onu-type {
+          type identityref {
+            base bbf-vomcit:xpon-onu-type;
+          }
+          description
+            "The ONU's xPON type.";
+        }
+        action delete-onu {
+          description
+              "Delete an ONU within the ONU Proxy. Note that this is not
+               the YANG state data but the Managed Entities state data
+               used to manage the ONU (e.g., MIB data sync valule).";
+            input {
+              leaf delete-state-data {
+                type boolean;
+                default "true";
+                description
+                  "When true, the ONU state data is deleted.";
+              }
+            }
+          }
+          action delete-only-onu-state-data {
             description
-              "When true, the ONU is able to be communicated with 
+              "Delete remaining state data for ONUs that have already
+               been deleted from the list of managed ONUS. Note - Do not
+               execute this unless the ONU has already been deleted with
+               'delete-onu' and with the 'delete-state-data' leaf set to
+               'true'. Note that this is not the YANG state data but the
+               Managed Entities state data used to manage the ONU (e.g.,
+               MIB data sync valule).";
+        }
+        action set-onu-communication {
+          description
+              "Dynamically configure the information necessary to
+               establish if an ONU can be communicated with by the vOMCI
+               Proxy along with remote endpoint to use.";
+          input {
+            leaf onu-communication-available {
+              type boolean;
+              description
+                "When true, the ONU is able to be communicated with 
+                 across the ONU management chain of entities.";
+            }
+            leaf olt-remote-endpoint {
+              type bbf-yang:string-ascii64;
+              description
+                  "The remote endpoint name to use for transmitting
+                   vOMCI messages toward the OLT.";
+            }
+            leaf vomci-function-remote-endpoint {
+              type bbf-yang:string-ascii64;
+              description
+                "The remote endpoint name to use for transmitting
+                vOMCI messages toward the vOMCI function.";
+            }
+            leaf xpon-onu-type {
+              type identityref {
+                base bbf-vomcit:xpon-onu-type;
+              }
+              description
+                "The ONU's xPON type.";
+            }
+            uses bbf-vomci-ent:vomci-onu-header;
+          }
+        }
+        uses bbf-vomci-ent:vomci-onu-header;
+        leaf onu-communication-available {
+          type boolean;
+          description
+              "When true, the ONU is able to be communicated with
                across the ONU management chain of entities.";
-          }
-          leaf olt-remote-endpoint-name {
-            type bbf-yang:string-ascii64;
+        }
+        leaf olt-remote-endpoint {
+          type bbf-yang:string-ascii64;
+          description
+            "The name remote endpoint to use for transmitting vOMCI 
+             messages toward the OLT.";
+        }
+        leaf vomci-function-remote-endpoint {
+          type bbf-yang:string-ascii64;
+          description
+            "The remote endpoint name to use for transmitting vOMCI 
+             messages toward the vOMCI function.";
+        }
+        
+        container statistics {
+          description
+            "vOMCI message and retransmission statistics.";
+          action reset {
             description
-              "The remote endpoint name to use for transmitting vOMCI 
-               messages toward the OLT.";
+                "Reset the counters of the vomci-statistics.";
           }
-          leaf vomci-function-remote-endpoint-name {
-            type bbf-yang:string-ascii64;
-            description
-              "The remote endpoint name to use for transmitting vOMCI 
-               messages toward the vOMCI function.";
-          }
-          uses bbf-vomci-ent:vomci-onu-header;
+          uses bbf-vomci-ent:vomci-message-statistics;
+          uses bbf-omci-mr:omci-msg-retrans-statistics;
         }
       }
-      uses bbf-vomci-ent:vomci-onu-header;
-      leaf onu-communication-available {
-        type boolean;
+    }
+  
+    container vomci {
+      description
+        "Configuration data associated with the vOMCI Proxy.";
+      leaf vomci-msg-timeout {
+        type uint16 {
+          range "10..max";
+        }
+        units "seconds";
+        default "900";
         description
-          "When true, the ONU is able to be communicated with across 
-           the ONU management chain of entities.";
+          "The maximum number of seconds that a vOMCI message is 
+           transmitted and has not been responded.The timeout used to 
+           cleanup stale vOMCI messages. The timeout is only applicable 
+           when OMCI message retransmission capability is not currently 
+           enabled for this entity.";
       }
-      leaf olt-remote-endpoint-name {
-        type bbf-yang:string-ascii64;
+    
+      container omci-message-retransmission {
+        if-feature "bbf-omci-mr:omci-msg-retrans-supported";
         description
-          "The name remote endpoint to use for transmitting vOMCI 
-           messages toward the OLT.";
-      }
-      leaf vomci-function-remote-endpoint-name {
-        type bbf-yang:string-ascii64;
+          "OMCI message retransmission capability configuration data.";
+        uses bbf-omci-mr:omci-msg-retrans-grouping;
+      } //OMCI message retransmission capability
+    
+      container remote-network-function {
+        presence "Enables access to remote network functions";
         description
-          "The remote endpoint name to use for transmitting vOMCI 
-           messages toward the vOMCI function.";
+          "The remote network function (NF) configuration.";
+        container nf-client {
+          if-feature "bbf-vomci-proxy:nf-client-supported";
+          description
+            "Client network function configuration";
+          leaf enabled {
+            type boolean;
+            default "true";
+            description
+              "Administratively enable the use of the client 
+               connectivity capability to the network function.";
+          }
+          uses bbf-nfc:nf-endpoint-grouping;
+        } //nf-client
+    
+        container nf-server {
+          if-feature "bbf-vomci-proxy:nf-server-supported";
+          description
+            "Server network function configuration.";
+          leaf enabled {
+            type boolean;
+            default "true";
+            description
+              "Administratively enable the use of the server 
+               connectivity capability for connecting network 
+               function.";
+          }
+          uses bbf-nfs:nf-server-grouping;
+        } //nf-server
       }
-      
       container statistics {
+        config false;
         description
-          "vOMCI message and retransmission statistics.";
+          "The OMCI function statistics.";
         action reset {
           description
             "Provides the capability to reset the counters of the 
-             vomci-statistics.";
+             statistics.";
         }
-        uses bbf-vomci-ent:vomci-message-statistics;
         uses bbf-omci-mr:omci-msg-retrans-statistics;
       }
-    }
-  }
-
-  container vomci {
-    description
-      "Configuration data associated with the vOMCI Proxy.";
-    leaf vomci-msg-timeout {
-      type uint16 {
-        range "10..max";
-      }
-      units "seconds";
-      default "900";
-      description
-        "The maximum number of seconds that a vOMCI message is 
-         transmitted and has not been responded.The timeout used to 
-         cleanup stale vOMCI messages. The timeout is only applicable 
-         when OMCI message retransmission capability is not currently 
-         enabled for this entity.";
-    }
-  
-    container omci-message-retransmission {
-      if-feature "bbf-omci-mr:omci-msg-retrans-supported";
-      description
-        "OMCI message retransmission capability configuration data.";
-      uses bbf-omci-mr:omci-msg-retrans-grouping;
-    } //OMCI message retransmission capability
-  
-    container remote-network-function {
-      presence "Enables access to remote network functions";
-      description
-        "The remote network function (NF) configuration.";
-      container nf-client {
-        if-feature "bbf-vomci-proxy:nf-client-supported";
-        description
-          "Client network function configuration";
-        leaf enabled {
-          type boolean;
-          default "true";
-          description
-            "Administratively enable the use of the client 
-             connectivity capability to the network function.";
-        }
-        uses bbf-nfc:nf-endpoint-grouping;
-      } //nf-client
-  
-      container nf-server {
-        if-feature "bbf-vomci-proxy:nf-server-supported";
-        description
-          "Server network function configuration.";
-        leaf enabled {
-          type boolean;
-          default "true";
-          description
-            "Administratively enable the use of the server 
-             connectivity capability for connecting network 
-             function.";
-        }
-        uses bbf-nfs:nf-server-grouping;
-      } //nf-server
-    }
-    container statistics {
-      config false;
-      description
-        "The OMCI function statistics.";
-      action reset {
-        description
-          "Provides the capability to reset the counters of the 
-           statistics.";
-      }
-      uses bbf-omci-mr:omci-msg-retrans-statistics;
     }
   }
 }

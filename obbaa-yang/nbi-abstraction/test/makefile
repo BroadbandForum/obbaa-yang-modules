@@ -1,0 +1,15 @@
+SEARCH_PATHS= -p ../../../yang-external/draft/ -p ../../../yang-external/standard/
+
+all:
+	yanglint -t config -f xml $(SEARCH_PATHS) ../bbf-obbaa-nt-line-profile.yang bandwidth-profile-example.xml > /dev/null
+	yanglint -t config -f xml $(SEARCH_PATHS) ../bbf-obbaa-nt-line-profile.yang line-profile-example.xml > /dev/null
+	yanglint -t config -f xml $(SEARCH_PATHS) ../../../yang-external/standard/ietf-network.yang ../../../yang-external/standard/ietf-network-topology.yang ../../../yang-external/standard/ietf-l2-topology.yang ../bbf-obbaa-tp-types.yang ../bbf-obbaa-an-network-topology.yang ../bbf-obbaa-l2-topology.yang ../bbf-obbaa-l2-access-common.yang l2-vlan-tp-example.xml > /dev/null
+	yanglint -t config -f xml $(SEARCH_PATHS) ../../../yang-external/standard/ietf-network.yang ../../../yang-external/standard/ietf-network-topology.yang ../../../yang-external/standard/ietf-l2-topology.yang ../bbf-obbaa-tp-types.yang ../bbf-obbaa-an-network-topology.yang ../bbf-obbaa-l2-topology.yang ../bbf-obbaa-l2-access-common.yang link-example.xml > /dev/null
+	yanglint -t config -f xml $(SEARCH_PATHS) ../../../yang-external/standard/ietf-network.yang ../../../yang-external/standard/ietf-network-topology.yang ../../../yang-external/standard/ietf-l2-topology.yang ../bbf-obbaa-tp-types.yang ../bbf-obbaa-an-network-topology.yang ../bbf-obbaa-l2-topology.yang ../bbf-obbaa-l2-access-common.yang node-and-tp-example1.xml > /dev/null
+	yanglint -t config -f xml $(SEARCH_PATHS) ../../../yang-external/standard/ietf-network.yang ../../../yang-external/standard/ietf-network-topology.yang ../../../yang-external/standard/ietf-l2-topology.yang ../bbf-obbaa-tp-types.yang ../bbf-obbaa-an-network-topology.yang ../bbf-obbaa-l2-topology.yang ../bbf-obbaa-l2-access-common.yang node-and-tp-example2.xml > /dev/null
+	yanglint -t config -f xml $(SEARCH_PATHS) ../../../yang-external/standard/ietf-network.yang ../../../yang-external/standard/ietf-network-topology.yang ../../../yang-external/standard/ietf-l2-topology.yang ../bbf-obbaa-tp-types.yang ../bbf-obbaa-an-network-topology.yang ../bbf-obbaa-l2-topology.yang ../bbf-obbaa-l2-access-common.yang service-profile-example.xml > /dev/null
+	yanglint -t config -f xml $(SEARCH_PATHS) ../../../yang-external/standard/ietf-network.yang ../../../yang-external/standard/ietf-network-topology.yang ../../../yang-external/standard/ietf-l2-topology.yang ../bbf-obbaa-tp-types.yang ../bbf-obbaa-an-network-topology.yang ../bbf-obbaa-l2-topology.yang ../bbf-obbaa-l2-access-common.yang vlan-forwarding-profile-example.xml > /dev/null
+	yanglint -t config -f xml $(SEARCH_PATHS) ../../../yang-external/standard/ietf-network.yang ../../../yang-external/standard/ietf-network-topology.yang ../../../yang-external/standard/ietf-l2-topology.yang ../bbf-obbaa-tp-types.yang ../bbf-obbaa-an-network-topology.yang ../bbf-obbaa-l2-topology.yang ../bbf-obbaa-l2-access-common.yang vlan-translation-profile-example.xml > /dev/null
+	echo "Done!"
+
+.PHONY: all

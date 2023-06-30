@@ -1,0 +1,14 @@
+module: bbf-obbaa-l2-topology
+
+  augment /nw:networks/nw:network/nw:node/nt:termination-point/l2t:l2-termination-point-attributes:
+    +--rw forwarding-vlan
+       +--rw vlan-id?              bbf-dot1qt:vlan-id
+       +--rw forwarding-profile?   -> /bbf-l2acc-c:vlan-forwarding-profiles/vlan-forwarding-profile/name
+  augment /nw:networks/nw:network/nw:node/nt:termination-point/l2t:l2-termination-point-attributes:
+    +--rw l2-access-attributes
+       +--rw vlan-translation
+          +--rw translation-profile?   -> /bbf-l2acc-c:vlan-translation-profiles/vlan-translation-profile/name
+          +--rw outer-vlan-id?         bbf-dot1qt:vlan-id
+          +--rw second-vlan-id?        bbf-dot1qt:vlan-id
+          +--rw push-outer-vlan-id?    bbf-dot1qt:vlan-id
+          +--rw push-second-vlan-id?   bbf-dot1qt:vlan-id

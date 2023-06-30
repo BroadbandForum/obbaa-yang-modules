@@ -1,0 +1,24 @@
+<line-bandwidth-profiles xmlns="urn:bbf:yang:obbaa:nt-line-profile">
+    <line-bandwidth-profile>
+        <name>bandwidth-profile-1</name>
+        <fixed-bandwidth>102400</fixed-bandwidth>
+        <assured-bandwidth>102400</assured-bandwidth>
+        <maximum-bandwidth>204800</maximum-bandwidth>
+    </line-bandwidth-profile>
+</line-bandwidth-profiles>
+
+<line-profiles xmlns="urn:bbf:yang:obbaa:nt-line-profile">
+    <line-profile>
+        <name>line-profile-1</name>
+        <virtual-ports>
+            <virtual-port>
+                <name>v-nni1</name>
+                <line-bandwidth-ref>bandwidth-profile-1</line-bandwidth-ref>
+                <match-criteria>
+                    <name>mapping-index-1</name>
+                    <vlan>10</vlan>
+                </match-criteria>
+            </virtual-port>
+        </virtual-ports>
+    </line-profile>
+</line-profiles>

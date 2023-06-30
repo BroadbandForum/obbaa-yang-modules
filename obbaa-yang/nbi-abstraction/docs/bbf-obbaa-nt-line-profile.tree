@@ -1,0 +1,20 @@
+module: bbf-obbaa-nt-line-profile
+  +--rw line-bandwidth-profiles
+  |  +--rw name?                     string
+  |  +--rw line-bandwidth-profile* [name]
+  |     +--rw name                 string
+  |     +--rw fixed-bandwidth?     uint64
+  |     +--rw assured-bandwidth?   uint64
+  |     +--rw maximum-bandwidth?   uint64
+  +--rw line-profiles
+     +--rw line-profile* [name]
+        +--rw name             string
+        +--rw virtual-ports
+           +--rw virtual-port* [name]
+              +--rw name                  string
+              +--rw line-bandwidth-ref?   line-bandwidth-ref
+              +--rw match-criteria* [name]
+                 +--rw name        string
+                 +--rw uni-port?   uint8
+                 +--rw vlan?       uint32
+                 +--rw priority?   uint8
